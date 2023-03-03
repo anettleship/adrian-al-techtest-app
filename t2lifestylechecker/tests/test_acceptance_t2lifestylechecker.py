@@ -27,3 +27,12 @@ def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint
     with app.test_client() as test_client:
         response = test_client.get("/js/testfile.js")
         assert response.status_code == 200
+
+
+def test_t2lifestylechecker_validate_route_should_return_post_data():
+    app = create_app(config.Testing())
+
+    # Create a test client using the Flask application configured for testing
+    with app.test_client() as test_client:
+        response = test_client.post("/validate", data={'nhsnumber': '123456789'})
+        assert "123456789" in response.text

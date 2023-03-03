@@ -1,5 +1,6 @@
-from flask import Blueprint, current_app, send_from_directory 
-from . templates_init import jinja_env
+import sys
+from flask import Blueprint, current_app, send_from_directory, request
+from .templates_init import jinja_env
 
 application_name = "t2lifestylechecker"
 
@@ -15,3 +16,9 @@ def index():
 @t2lifestylechecker.route("/js/<path:filename>")
 def static_js(filename):
     return send_from_directory(f'../{application_name}/static/js', filename)
+
+
+@t2lifestylechecker.route("/validate", methods=["POST"])
+def validate():
+    return request.form["nhsnumber"]
+

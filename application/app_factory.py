@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from application.config import stage_list
-from t2lifestylechecker.t2app import t2lifestylechecker
+from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
 
 
 def create_app(application_config):
