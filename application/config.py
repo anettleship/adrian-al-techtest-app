@@ -1,5 +1,11 @@
 import os
+from enum import Enum
 
+# don't use enum, just add each class to a dictionary and lookup from the environment variable
+
+application_mode = Enum(
+    "application_mode", ["production", "development", "testing"]
+)
 
 class config:
 
