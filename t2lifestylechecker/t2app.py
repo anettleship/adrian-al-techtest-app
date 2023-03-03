@@ -1,17 +1,11 @@
-from flask import Blueprint, current_app
-import os
+from flask import Blueprint, current_app, render_template
+from . template_setup import jinja_env
 
 
 t2lifestylechecker = Blueprint("t2lifesteylchecker", __name__)
 
-
 @t2lifestylechecker.route("/")
 def index():
 
-    secret_key = current_app.secret_key
-
-    if secret_key != None:
-        if len(secret_key) > -1:
-            return "Application passed basic healthcheck"
-
-    raise EnvironmentError("Valid Secret Key not set!")
+    template = jinja_env.get_template("base.html") 
+    return template.render(title="NHS")

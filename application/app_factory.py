@@ -1,6 +1,6 @@
 from flask import Flask
 
-from t2lifestylechecker.t2app import t2lifestylechecker 
+from t2lifestylechecker.t2app import t2lifestylechecker
 
 
 def create_app(config):
