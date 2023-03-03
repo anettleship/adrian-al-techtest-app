@@ -1,5 +1,5 @@
-from flask import Blueprint, current_app, render_template
-from .template_setup import jinja_env
+from flask import Blueprint, current_app 
+from . templates_init import jinja_env
 
 
 t2lifestylechecker = Blueprint("t2lifesteylchecker", __name__)

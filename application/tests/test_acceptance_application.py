@@ -1,4 +1,3 @@
-import application
 from application.app_factory import create_app
 import application.config as config
 
@@ -10,4 +9,3 @@ def test_app_should_return_http_success_from_default_route():
     with app.test_client() as test_client:
         response = test_client.get("/")
         assert response.status_code == 200
-
