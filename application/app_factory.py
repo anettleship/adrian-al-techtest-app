@@ -1,15 +1,17 @@
+import os
 from flask import Flask
-
+from dotenv import load_dotenv
+from application.config import stage_list
 from t2lifestylechecker.t2app import t2lifestylechecker
 
 
-def create_app(config):
+def create_app(application_config):
     """
     Application Factory function to instantiate an application from a given config class defined in config.py
     """
 
     app = Flask(__name__)
-    app.config.from_object(config)
+    app.config.from_object(application_config)
     register_blueprints(app)
 
     return app
