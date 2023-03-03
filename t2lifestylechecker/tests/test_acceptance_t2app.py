@@ -18,3 +18,12 @@ def test_t2lifestylechecker_should_return_text_NHS_in_html_response_from_default
     with app.test_client() as test_client:
         response = test_client.get("/")
         assert "NHS" in response.text
+
+
+def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint_static_js_folder():
+    app = create_app(config.testing())
+
+    # Create a test client using the Flask application configured for testing
+    with app.test_client() as test_client:
+        response = test_client.get("/js/testfile.js")
+        assert response.status_code == 200
