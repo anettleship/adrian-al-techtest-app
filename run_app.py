@@ -6,9 +6,10 @@ import application.config as config
 
 app = create_app(config.testing())
 
-def main(app):
 
+def main(app):
     app.run()
+
 
 if __name__ == "__main__":
     main(app)

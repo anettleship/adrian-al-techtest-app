@@ -7,7 +7,7 @@ name = "pypi"
 flask = "*"
 pytest = "*"
 
-[dev-packages]
+[dev - packages]
 black = "*"
 
 [requires]

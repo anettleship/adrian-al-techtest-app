@@ -2,9 +2,7 @@ from application.app_factory import create_app
 import application.config as config
 
 
-
 def test_t2lifestylechecker_should_return_http_success_from_default_route():
-
     app = create_app(config.testing())
 
     # Create a test client using the Flask application configured for testing
@@ -12,12 +10,11 @@ def test_t2lifestylechecker_should_return_http_success_from_default_route():
         response = test_client.get("/")
         assert response.status_code == 200
 
-def test_t2lifestylechecker_should_return_text_NHS_in_html_response_from_default_route():
 
+def test_t2lifestylechecker_should_return_text_NHS_in_html_response_from_default_route():
     app = create_app(config.testing())
 
     # Create a test client using the Flask application configured for testing
     with app.test_client() as test_client:
         response = test_client.get("/")
         assert "NHS" in response.text
-        

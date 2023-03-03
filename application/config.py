@@ -8,7 +8,6 @@ class config:
     """
 
     def __init__(self):
-
         # Default settings
         self.FLASK_ENV = "production"
         self.DEBUG = False

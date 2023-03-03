@@ -25,4 +25,3 @@ def register_blueprints(app):
     app.register_blueprint(t2lifestylechecker, url_prefix="/")
 
     return app
-
