@@ -3,12 +3,15 @@ import os
 from dotenv import load_dotenv
 from enum import Enum
 from . localisation.external_api_return_states_text import return_state_localisations
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class ExternalValidationHandler():
     def __init__(self, user_data):
 
         load_dotenv()
+        self.user_data = user_data
         self.subscription_key_name = os.environ.get("SUBSCRIPTION_KEY_NAME")
         self.subscription_key = os.environ.get("SUBSCRIPTION_KEY")
         self.api_url = os.environ.get("EXTERNAL_API_URL")
@@ -27,7 +30,7 @@ class ExternalValidationHandler():
             self.subscription_key_name: self.subscription_key
         }
 
-        return requests.post(self.api_url + nhsnumber, data=data)
+        return requests.get(self.api_url + nhsnumber, headers=data)
 
     def process_response(self, response: requests.Response) -> Enum:
 
@@ -44,16 +47,38 @@ class ExternalValidationHandler():
 
         return self.return_states['found']
 
-
     def user_data_matches(self, response: requests.Response) -> bool:
 
-        result = True 
+        firstname = self.user_data['first_name'].lower()
+        lastname = self.user_data['last_name'].lower()
+        fullname = f'{lastname}, {firstname}'
 
-        return result
+        if fullname != response.json()['name'].lower():
+            return False
 
-    def user_over_sixteen(self, response: requests.Response) -> bool:
+        date_of_birth = self.make_birthdate_string(self.user_data)
 
-        result = True
+        if date_of_birth != response.json['born']:
+            return False
 
-        return result
+        return True
+
+    def user_over_sixteen(self, date_of_birth: datetime, today=datetime.now()) -> bool:
+
+        date_object = datetime.strptime(date_of_birth, "%d-%m-%Y")
+        date_object_plus_sixteen = date_object + relativedelta(years=16)
+
+        if date_object_plus_sixteen > today:
+            return False
+
+        return True
+
+
+    def make_birthdate_string(self, user_data: dict) -> str:
+
+        day = f"{int(self.user_data['day']):02}"
+        month = f"{int(self.user_data['month']):02}"
+        year = f"{self.user_data['year']}"
+        return f'{day}-{month}-{year}'
+
  
