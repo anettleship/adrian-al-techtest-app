@@ -61,10 +61,3 @@ class Production(Config):
         super().__init__()
         self.FLASK_ENV = "production"
         self.TESTING = False 
-
-
-stage_list = {
-    "production" : Production,
-    "development" : Development,
-    "testing" : Testing
-}

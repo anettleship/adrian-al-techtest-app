@@ -2,7 +2,7 @@ import os
 from application.app_factory import create_app
 import application.config as config
 from dotenv import load_dotenv 
-from application.config import stage_list
+from application.config_stages import stage_list
 
 
 def test_app_should_return_http_success_from_default_route():

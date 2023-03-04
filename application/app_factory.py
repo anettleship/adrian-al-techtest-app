@@ -1,7 +1,6 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from application.config import stage_list
 from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
 
 

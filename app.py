@@ -1,6 +1,6 @@
 import os
 from application.app_factory import create_app
-from application.config import stage_list
+from application.config_stages import stage_list
 from dotenv import load_dotenv
 
 # Create app from environment variable setting. How do we best do this?
