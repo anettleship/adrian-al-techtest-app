@@ -5,6 +5,8 @@ High Level Design:
 
 This is a Flask application implemented with an app_factory to instantiate apps with different settings for testing, development and production. It is implemented with a single blueprint, to keep the application itself separate from the component: t2lifestylechecker that addresses our requirements.
 
+We use pipenv for virtual environment management, pytest for testing and requests to call our external api.
+
 I chose Flask in favour of Django because it results in a ligher weight codebase, can be stood up faster, and because the requirements do not specify the need for a database and ask for a simple application.
 
 For frontend we use bootstrap and a small amount of jQuery to provide better user experience while we are calling our external api. - maybe this part will be a nice to have, along with Asyncronouse call to the api.
