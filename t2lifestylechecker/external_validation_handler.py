@@ -73,12 +73,9 @@ class ExternalValidationHandler():
 
         return True
 
-
     def make_birthdate_string(self, user_data: dict) -> str:
 
         day = f"{int(self.user_data['day']):02}"
         month = f"{int(self.user_data['month']):02}"
         year = f"{self.user_data['year']}"
         return f'{day}-{month}-{year}'
-
- 
