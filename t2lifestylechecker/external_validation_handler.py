@@ -55,18 +55,6 @@ class ExternalValidationHandler():
 
         return self.return_states['found']
 
-    def user_data_matches(self, response: requests.Response) -> bool:
-
-        if fullname != response.json()['name'].lower():
-            return False
-
-        date_of_birth = self.make_birthdate_string(self.user_data)
-
-        if date_of_birth != response.json['born']:
-            return False
-
-        return True
-
     def user_over_sixteen(self, today=datetime.now()) -> bool:
 
         date_object = datetime.strptime(self.dateofbirth, "%d-%m-%Y")
@@ -77,12 +65,15 @@ class ExternalValidationHandler():
 
         return True
 
-    def make_birthdate_string(self, user_data: dict) -> str:
+    def user_data_matches(self, response: requests.Response) -> bool:
 
-        day = f"{int(self.user_data['day']):02}"
-        month = f"{int(self.user_data['month']):02}"
-        year = f"{self.user_data['year']}"
-        return f'{day}-{month}-{year}'
+        if self.make_fulname_string() != response.json()['name'].lower():
+            return False
+
+        if self.dateofbirth != response.json['born']:
+            return False
+
+        return True
 
     def make_fullname_string(self):
 
