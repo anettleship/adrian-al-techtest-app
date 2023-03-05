@@ -8,10 +8,14 @@ from dateutil.relativedelta import relativedelta
 
 
 class ExternalValidationHandler():
-    def __init__(self, user_data):
+    def __init__(self, nhsnumber, firstname, lastname, dateofbirth):
 
+        self.nhsnumber = nhsnumber
+        self.firstname = firstname
+        self.lastname = lastname
+        self.dateofbirth = dateofbirth
+ 
         load_dotenv()
-        self.user_data = user_data
         self.subscription_key_name = os.environ.get("SUBSCRIPTION_KEY_NAME")
         self.subscription_key = os.environ.get("SUBSCRIPTION_KEY")
         self.api_url = os.environ.get("EXTERNAL_API_URL")
@@ -25,12 +29,16 @@ class ExternalValidationHandler():
             ]
         )
 
-    def call_validation_api(self, nhsnumber: str) -> requests.Response:
+    def validate_details(self) -> Enum:
+
+        response = call_validation_api
+
+    def call_validation_api(self) -> requests.Response:
         data = {
             self.subscription_key_name: self.subscription_key
         }
 
-        return requests.get(self.api_url + nhsnumber, headers=data)
+        return requests.get(self.api_url + self.nhsnumber, headers=data)
 
     def process_response(self, response: requests.Response) -> Enum:
 
@@ -49,10 +57,6 @@ class ExternalValidationHandler():
 
     def user_data_matches(self, response: requests.Response) -> bool:
 
-        firstname = self.user_data['first_name'].lower()
-        lastname = self.user_data['last_name'].lower()
-        fullname = f'{lastname}, {firstname}'
-
         if fullname != response.json()['name'].lower():
             return False
 
@@ -63,9 +67,9 @@ class ExternalValidationHandler():
 
         return True
 
-    def user_over_sixteen(self, date_of_birth: datetime, today=datetime.now()) -> bool:
+    def user_over_sixteen(self, today=datetime.now()) -> bool:
 
-        date_object = datetime.strptime(date_of_birth, "%d-%m-%Y")
+        date_object = datetime.strptime(self.dateofbirth, "%d-%m-%Y")
         date_object_plus_sixteen = date_object + relativedelta(years=16)
 
         if date_object_plus_sixteen > today:
@@ -79,3 +83,9 @@ class ExternalValidationHandler():
         month = f"{int(self.user_data['month']):02}"
         year = f"{self.user_data['year']}"
         return f'{day}-{month}-{year}'
+
+    def make_fullname_string(self):
+
+        firstname = self.firstname.lower()
+        lastname = self.lastname.lower()
+        return f'{lastname}, {firstname}'
