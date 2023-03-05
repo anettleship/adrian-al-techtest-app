@@ -138,4 +138,8 @@ def test_ExternalValidationHandler_user_over_sixteen_should_return_true_from_tod
 
 
 def test_ExternalValidationHandler_user_data_matches_should_be_tested():
-    True == False
+    assert True == False
+
+
+def test_ExternalValidationHandler_validate_details_should_be_tested():
+    assert True == False

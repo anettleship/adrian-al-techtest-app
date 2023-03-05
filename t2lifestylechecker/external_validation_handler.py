@@ -31,7 +31,11 @@ class ExternalValidationHandler():
 
     def validate_details(self) -> Enum:
 
-        response = call_validation_api
+        response = self.call_validation_api()
+
+        return self.process_response(response)
+
+
 
     def call_validation_api(self) -> requests.Response:
         data = {
@@ -67,7 +71,7 @@ class ExternalValidationHandler():
 
     def user_data_matches(self, response: requests.Response) -> bool:
 
-        if self.make_fulname_string() != response.json()['name'].lower():
+        if self.make_fullname_string() != response.json()['name'].lower():
             return False
 
         if self.dateofbirth != response.json['born']:
