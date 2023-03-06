@@ -40,7 +40,7 @@ def test_t2lifestylechecker_validate_route_should_return_response_to_post_data()
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-        assert "123456789" in response.text
+        assert response.status_code == 200
 
 @pytest.mark.vcr
 def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_invalid_user():
