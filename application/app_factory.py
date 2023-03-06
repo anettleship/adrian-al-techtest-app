@@ -1,7 +1,10 @@
 import os
 from flask import Flask
+from flask_login import LoginManager
 from dotenv import load_dotenv
 from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
+
+
 
 
 def create_app(application_config):

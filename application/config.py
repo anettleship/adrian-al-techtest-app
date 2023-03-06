@@ -35,7 +35,7 @@ class Testing(Config):
         super().__init__()
         self.FLASK_ENV = "testing"
         self.TESTING = True
-        self.SECRET_KEY = "testing secret key only lets not put this in production"
+        self.SECRET_KEY = ''
 
 
 class Development(Config):

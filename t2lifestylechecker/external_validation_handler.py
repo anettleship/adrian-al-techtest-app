@@ -3,7 +3,7 @@ import os
 from enum import Enum
 from dotenv import load_dotenv
 from datetime import datetime
-
+from flask import current_app
 from . valid_results import external_api_valid_results
 
 

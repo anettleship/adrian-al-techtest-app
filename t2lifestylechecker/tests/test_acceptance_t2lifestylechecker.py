@@ -1,4 +1,6 @@
 import pytest
+from flask import url_for
+from flask_login import current_user
 from application.app_factory import create_app
 import application.config as config
 
@@ -35,7 +37,7 @@ def test_t2lifestylechecker_validate_route_should_return_response_to_post_data()
         'nhsnumber': '123456789',
         'firstname': 'Kent',
         'lastname': 'Beck',
-        'dateofbirth': '31-03-1961',
+        'dateofbirth': '1961-03-31',
     }
 
     with app.test_client() as test_client:
@@ -50,9 +52,57 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
         'nhsnumber': '123456789',
         'firstname': 'Kent',
         'lastname': 'Beck',
+        'dateofbirth': '1961-03-31',
+    }
+
+    with app.test_client() as test_client:
+        response = test_client.post("/validate", data=form_data)
+        assert "Your details could not be found" in response.text
+
+
+@pytest.mark.vcr
+def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_not_matched():
+    app = create_app(config.Testing())
+
+    form_data = {
+        'nhsnumber': '111222333',
+        'firstname': 'Kent',
+        'lastname': 'Beck',
         'dateofbirth': '31-03-1961',
     }
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
         assert "Your details could not be found" in response.text
+
+
+@pytest.mark.vcr
+def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_under_sixteens():
+    app = create_app(config.Testing())
+
+    form_data = {
+        'nhsnumber': '555666777',
+        'firstname': 'Megan',
+        'lastname': 'May',
+        'dateofbirth': '2006-11-15',
+    }
+
+    with app.test_client() as test_client:
+        response = test_client.post("/validate", data=form_data)
+        assert "Your details could not be found" in response.text
+
+
+@pytest.mark.vcr
+def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match():
+    app = create_app(config.Testing())
+
+    form_data = {
+        'nhsnumber': '444555666',
+        'firstname': 'Charles',
+        'lastname': 'Bond',
+        'dateofbirth': '1953-02-28',
+    }
+
+    with app.test_client() as test_client:
+        response = test_client.post("/validate", data=form_data)
+        assert current_user.is_authenticated
