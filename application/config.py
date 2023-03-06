@@ -20,11 +20,6 @@ class Config:
         self.SECRET_KEY = os.getenv("SECRET_KEY")
 
 
-        # Raise an error here instead
-        if self.SECRET_KEY == None:
-            print("No secret key set, app will quit.")
-
-
 class Testing(Config):
     """
     Config for instantiating an app within software tests.
@@ -35,7 +30,6 @@ class Testing(Config):
         super().__init__()
         self.FLASK_ENV = "testing"
         self.TESTING = True
-        self.SECRET_KEY = "testing secret key only lets not put this in production"
 
 
 class Development(Config):
@@ -48,7 +42,6 @@ class Development(Config):
         super().__init__()
         self.FLASK_ENV = "development"
         self.TESTING = True
-        self.SECRET_KEY = "testing secret key only lets not put this in production"
 
 
 class Production(Config):
