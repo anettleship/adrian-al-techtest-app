@@ -1,10 +1,10 @@
 import requests
 import os
-from dotenv import load_dotenv
 from enum import Enum
-from . localisation.external_api_return_states_text import return_state_localisations
+from dotenv import load_dotenv
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
+
+from . valid_results import external_api_valid_results
 
 
 class ExternalValidationHandler():
@@ -17,18 +17,6 @@ class ExternalValidationHandler():
         self.today = today
  
         load_dotenv()
-        self.subscription_key_name = os.environ.get("SUBSCRIPTION_KEY_NAME")
-        self.subscription_key = os.environ.get("SUBSCRIPTION_KEY")
-        self.api_url = os.environ.get("EXTERNAL_API_URL")
-
-        self.return_states = Enum(
-            "return_states", [
-                "not_found",
-                "details_not_matched",
-                "not_over_sixteen",
-                "found"
-            ]
-        )
 
     def validate_details(self) -> Enum:
 
@@ -36,29 +24,31 @@ class ExternalValidationHandler():
 
         return self.process_response(response)
 
-
-
     def call_validation_api(self) -> requests.Response:
+        subscription_key_name = os.environ.get("SUBSCRIPTION_KEY_NAME")
+        subscription_key = os.environ.get("SUBSCRIPTION_KEY")
+        api_url = os.environ.get("EXTERNAL_API_URL")
+
         data = {
-            self.subscription_key_name: self.subscription_key
+            subscription_key_name: subscription_key
         }
 
-        return requests.get(self.api_url + self.nhsnumber, headers=data)
+        return requests.get(api_url + self.nhsnumber, headers=data)
 
     def process_response(self, response: requests.Response) -> Enum:
 
         if response.status_code != 200:
-            return self.return_states['not_found']
+            return external_api_valid_results['not_found']
 
         # check if user_data matches data in response
         if not self.user_data_matches(response):
-            return self.return_states['details_not_matched']
+            return external_api_valid_results['details_not_matched']
 
         # check if user date of birth is not over sixteen
         if not self.get_age_today(self.dateofbirth) >= 16:
-            return self.return_states['not_over_sixteen']
+            return external_api_valid_results['not_over_sixteen']
 
-        return self.return_states['found']
+        return external_api_valid_results['found']
 
     def get_age_today(self, dateofbirth) -> int:
 

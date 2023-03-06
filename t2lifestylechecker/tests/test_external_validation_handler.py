@@ -1,4 +1,5 @@
 from t2lifestylechecker.external_validation_handler import ExternalValidationHandler
+from t2lifestylechecker.valid_results import external_api_valid_results
 from dotenv import load_dotenv
 from datetime import datetime
 import requests
@@ -43,7 +44,7 @@ def test_ExternalValidationHandler_process_response_should_match_known_cases(
 
     response = validator.call_validation_api() 
     
-    assert validator.process_response(response) == validator.return_states[expected]
+    assert validator.process_response(response) == external_api_valid_results[expected]
 
 
 known_api_transactions_1 = [
@@ -58,7 +59,7 @@ def test_ExternalValidationHandler_validate_details_executes_function_sequence_c
     today_object = datetime.strptime("31-12-2021", "%d-%m-%Y")
     validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
     
-    assert validator.validate_details() == validator.return_states[expected]
+    assert validator.validate_details() == external_api_valid_results[expected]
 
 
 birtday_inputs = [

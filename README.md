@@ -15,6 +15,10 @@ We allow single digit input for day and month (although the interface requests 2
 
 We're using pytest-recording to 'playback' api responses from the external api for our tests.
 
+When adding or changing tests with the @pytest.mark.vcr decorator, it is necessary to run the following command to place a live request to the external api and record the result for any tests which do not have a matching 'recording' in the tests/cassettes folder. These are provided in the package, so the following command is not necessary in order to run tests if no changes are made to them.
+
+pytest --record-mode=once
+
 Note: the external api does not return consistent date of birth for the same nhsnumber. We validate
 user input using age rather than exact date of birth as a result, and tests use a 'pre-recorded' response using pytest-recording, but might fail erroneously if that response is 're-recorded'.
 
