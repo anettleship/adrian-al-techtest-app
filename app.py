@@ -1,6 +1,4 @@
 import os
-from flask_login import LoginManager, UserMixin
-from application.auth import User, Auth
 from application.app_factory import create_app
 from application.config_stages import stage_list
 from dotenv import load_dotenv
