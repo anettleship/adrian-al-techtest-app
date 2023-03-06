@@ -45,14 +45,15 @@ class ExternalValidationHandler():
             return external_api_valid_results['details_not_matched']
 
         # check if user date of birth is not over sixteen
-        if not self.get_age_today(self.dateofbirth) >= 16:
+        form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
+        if not self.get_age_today(self.dateofbirth, form_date_format_str) >= 16:
             return external_api_valid_results['not_over_sixteen']
 
         return external_api_valid_results['found']
 
-    def get_age_today(self, dateofbirth) -> int:
+    def get_age_today(self, dateofbirth: str, date_format_str: str) -> int:
 
-        born = datetime.strptime(dateofbirth, "%d-%m-%Y")
+        born = datetime.strptime(dateofbirth, date_format_str)
         today = self.today 
         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
@@ -61,8 +62,10 @@ class ExternalValidationHandler():
         if self.make_fullname_string() != response.json()['name'].lower():
             return False
 
-        input_age = self.get_age_today(self.dateofbirth)
-        age_from_api_response = self.get_age_today(response.json()['born'])
+        form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
+        api_date_format_str = os.environ.get("API_DATE_FORMAT_STRING")
+        input_age = self.get_age_today(self.dateofbirth, form_date_format_str)
+        age_from_api_response = self.get_age_today(response.json()['born'], api_date_format_str)
 
         if input_age != age_from_api_response:
             return False

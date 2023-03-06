@@ -22,10 +22,10 @@ def test_ExternalValidationHandler_call_validation_api_should_return_requests_re
 
 
 known_api_transactions = [
-    ('123456789', 'Kent', 'Beck', '31-03-1961', 'not_found'),
-    ('111222333', 'John', 'Doe', '08-01-2005', 'found'),
-    ('111222333', 'John', 'Doe', '08-01-2001', 'details_not_matched'),
-    ('555666777', 'Megan', 'May', '15-11-2006', 'not_over_sixteen'),
+    ('123456789', 'Kent', 'Beck', '1961-03-31', 'not_found'),
+    ('111222333', 'John', 'Doe', '2004-06-21', 'found'),
+    ('111222333', 'John', 'Doe', '2001-01-08', 'details_not_matched'),
+    ('555666777', 'Megan', 'May', '2006-11-15', 'not_over_sixteen'),
 ]
 
 @pytest.mark.vcr
@@ -39,7 +39,7 @@ def test_ExternalValidationHandler_process_response_should_match_known_cases(
     # The above input dates of birth should be realigned with the recorded api response
     # if api responses are ever re-recorded.
 
-    today_object = datetime.strptime('31-12-2021', "%d-%m-%Y")
+    today_object = datetime.strptime('2021-12-31', "%Y-%m-%d")
     validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
 
     response = validator.call_validation_api() 
@@ -48,7 +48,7 @@ def test_ExternalValidationHandler_process_response_should_match_known_cases(
 
 
 known_api_transactions_1 = [
-    ('123456789', 'Kent', 'Beck', '31-03-1961', 'not_found'),
+    ('123456789', 'Kent', 'Beck', '1961-03-31', 'not_found'),
 ]
 
 @pytest.mark.vcr
@@ -56,22 +56,22 @@ known_api_transactions_1 = [
 def test_ExternalValidationHandler_validate_details_executes_function_sequence_correctly(
     nhsnumber, firstname, lastname, dateofbirth, expected
 ):
-    today_object = datetime.strptime("31-12-2021", "%d-%m-%Y")
+    today_object = datetime.strptime("2021-12-31", "%Y-%m-%d")
     validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
     
     assert validator.validate_details() == external_api_valid_results[expected]
 
 
 birtday_inputs = [
-    ("01-01-2000", "01-01-2016", 16),
-    ("31-01-2000", "30-01-2017", 16),
-    ("01-01-2000", "01-06-2036", 36),
-    ("01-01-1900", "01-01-1916", 16),
-    ("29-02-2000", "29-02-2016", 16),
-    ("01-01-2000", "31-12-2015", 15),
-    ("01-01-1900", "01-01-1915", 15),
-    ("29-02-2000", "28-02-2016", 15),
-    ("01-01-1900", "01-01-2016", 116),
+    ("2000-01-01", "2016-01-01", 16),
+    ("2000-01-31", "2017-01-30", 16),
+    ("2000-01-01", "2036-06-01", 36),
+    ("1900-01-01", "1916-01-01", 16),
+    ("2000-02-29", "2016-02-29", 16),
+    ("2000-01-01", "2015-12-31", 15),
+    ("1900-01-01", "1915-01-01", 15),
+    ("2000-02-29", "2016-02-28", 15),
+    ("1900-01-01", "2016-01-01", 116),
 ]
 
 
@@ -83,10 +83,10 @@ def test_ExternalValidationHandler_get_age_today_should_return_correct_age(
     firstname = None
     lastname = None
 
-    today_object = datetime.strptime(today, "%d-%m-%Y")
+    today_object = datetime.strptime(today, "%Y-%m-%d")
     validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
 
-    assert validator.get_age_today(dateofbirth) == expected
+    assert validator.get_age_today(dateofbirth, "%Y-%m-%d") == expected
 
 
 name_inputs = [
@@ -111,9 +111,9 @@ def test_ExternalValidationHandler_make_fullname_string_should_not_be_case_sensi
 
 
 known_api_transactions_matches = [
-    ('111222333', 'John', 'Doe', '04-11-2004', True),
-    ('111222333', 'John', 'Doe', '04-11-2001', False),
-    ('555666777', 'Megan', 'May', '15-11-2006', True),
+    ('111222333', 'John', 'Doe', '2004-11-04', True),
+    ('111222333', 'John', 'Doe', '2001-11-04', False),
+    ('555666777', 'Megan', 'May', '2006-11-15', True),
 ]
 
 @pytest.mark.vcr
