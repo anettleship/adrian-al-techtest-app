@@ -38,12 +38,28 @@ def test_ExternalValidationHandler_process_response_should_match_known_cases(
     # The above input dates of birth should be realigned with the recorded api response
     # if api responses are ever re-recorded.
 
-    today = datetime.strptime("31-12-2021", "%d-%m-%Y")
-    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today)
+    today_object = datetime.strptime('31-12-2021', "%d-%m-%Y")
+    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
 
     response = validator.call_validation_api() 
     
     assert validator.process_response(response) == validator.return_states[expected]
+
+
+known_api_transactions_1 = [
+    ('123456789', 'Kent', 'Beck', '31-03-1961', 'not_found'),
+]
+
+@pytest.mark.vcr
+@pytest.mark.parametrize("nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions_1)
+def test_ExternalValidationHandler_validate_details_executes_function_sequence_correctly(
+    nhsnumber, firstname, lastname, dateofbirth, expected
+):
+    today_object = datetime.strptime("31-12-2021", "%d-%m-%Y")
+    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
+    
+    assert validator.validate_details() == validator.return_states[expected]
+
 
 birtday_inputs = [
     ("01-01-2000", "01-01-2016", 16),
