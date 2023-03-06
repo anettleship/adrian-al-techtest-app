@@ -7,6 +7,11 @@ import pytest
 import json
 
 
+@pytest.fixture(scope="module")
+def vcr_config():
+    return {"filter_headers": ["Ocp-Apim-Subscription-Key"]}
+
+
 @pytest.mark.vcr
 def test_ExternalValidationHandler_call_validation_api_should_return_requests_response_object():
     nhsnumber = "111222333"

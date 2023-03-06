@@ -6,6 +6,11 @@ from application.auth import Auth
 import application.config as config
 
 
+@pytest.fixture(scope="module")
+def vcr_config():
+    return {"filter_headers": ["Ocp-Apim-Subscription-Key"]}
+
+
 def test_t2lifestylechecker_should_return_http_success_from_default_route():
     app = create_app(config.Testing())
 
