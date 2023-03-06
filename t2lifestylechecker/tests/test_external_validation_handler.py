@@ -7,12 +7,7 @@ import pytest
 import json
 
 
-@pytest.fixture(scope="module")
-def vcr_config():
-    return {"filter_headers": ["Ocp-Apim-Subscription-Key"]}
-
-
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_ExternalValidationHandler_call_validation_api_should_return_requests_response_object():
     nhsnumber = "111222333"
     firstname = None
@@ -33,7 +28,7 @@ known_api_transactions = [
     ('555666777', 'Megan', 'May', '2006-11-15', 'not_over_sixteen'),
 ]
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize("nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions)
 def test_ExternalValidationHandler_process_response_should_match_known_cases(
     nhsnumber, firstname, lastname, dateofbirth, expected
@@ -56,7 +51,7 @@ known_api_transactions_1 = [
     ('123456789', 'Kent', 'Beck', '1961-03-31', 'not_found'),
 ]
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize("nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions_1)
 def test_ExternalValidationHandler_validate_details_executes_function_sequence_correctly(
     nhsnumber, firstname, lastname, dateofbirth, expected
@@ -121,7 +116,7 @@ known_api_transactions_matches = [
     ('555666777', 'Megan', 'May', '2006-11-15', True),
 ]
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize("nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions_matches)
 def test_ExternalValidationHandler_user_data_matches_should_return_correctly_for_known_cases(
     nhsnumber, firstname, lastname, dateofbirth, expected

@@ -6,11 +6,6 @@ from application.auth import Auth
 import application.config as config
 
 
-@pytest.fixture(scope="module")
-def vcr_config():
-    return {"filter_headers": ["Ocp-Apim-Subscription-Key"]}
-
-
 def test_t2lifestylechecker_should_return_http_success_from_default_route():
     app = create_app(config.Testing())
 
@@ -35,7 +30,7 @@ def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint
         assert response.status_code == 200
 
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_response_to_post_data():
     app = create_app(config.Testing())
 
@@ -50,7 +45,7 @@ def test_t2lifestylechecker_validate_route_should_return_response_to_post_data()
         response = test_client.post("/validate", data=form_data)
         assert response.status_code == 200
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_invalid_user():
     app = create_app(config.Testing())
 
@@ -66,7 +61,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
         assert "Your details could not be found" in response.text
 
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_not_matched():
     app = create_app(config.Testing())
 
@@ -82,7 +77,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
         assert "Your details could not be found" in response.text
 
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_under_sixteens():
     app = create_app(config.Testing())
 
@@ -98,7 +93,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
         assert "Your details could not be found" in response.text
 
 
-@pytest.mark.vcr
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match():
     app = create_app(config.Testing())
 

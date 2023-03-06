@@ -15,9 +15,7 @@ We allow single digit input for day and month (although the interface requests 2
 
 We're using pytest-recording to 'playback' api responses from the external api for our tests.
 
-When adding or changing tests with the @pytest.mark.vcr decorator, it is necessary to run the following command to place a live request to the external api and record the result for any tests which do not have a matching 'recording' in the tests/cassettes folder. These are provided in the package, so the following command is not necessary in order to run tests if no changes are made to them.
-
-There is a fixture that mentions our Ocp-Apim-Subscription-Key at the top of our test files which use pytest-recording. This ensures our api key is not included in the yaml files that record our requests, preventing the key being written to our git repository. It is essential that this fixture is added to any new test files which also record and playback external api calls.
+When adding or changing tests with the @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"])) decorator, it is necessary to run the following command to place a live request to the external api and record the result for any tests which do not have a matching 'recording' in the tests/cassettes folder. These are provided in the package, so the following command is not necessary in order to run tests if no changes are made to them.
 
 pytest --record-mode=once
 
