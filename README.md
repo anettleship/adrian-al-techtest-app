@@ -13,6 +13,11 @@ For frontend we use bootstrap and a small amount of jQuery to provide better use
 
 We allow single digit input for day and month (although the interface requests 2), but we only accept 4 digit input for years, to avoid ambiguity between 2023 and 1923 - mention how I would add better error checking and user feedback on invalid input for invalid dates.
 
+We're using pytest-recording to 'playback' api responses from the external api for our tests.
+
+Note: the external api does not return consistent date of birth for the same nhsnumber. We validate
+user input using age rather than exact date of birth as a result, and tests use a 'pre-recorded' response using pytest-recording, but might fail erroneously if that response is 're-recorded'.
+
 Instructions to install and run on a local machine using the Flask inbuilt testing server:
 
 Install Python 3.11.2:

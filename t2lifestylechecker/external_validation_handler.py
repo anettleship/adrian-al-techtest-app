@@ -8,12 +8,13 @@ from dateutil.relativedelta import relativedelta
 
 
 class ExternalValidationHandler():
-    def __init__(self, nhsnumber, firstname, lastname, dateofbirth):
+    def __init__(self, nhsnumber: str, firstname: str, lastname: str, dateofbirth: str, today=datetime.now()):
 
         self.nhsnumber = nhsnumber
         self.firstname = firstname
         self.lastname = lastname
         self.dateofbirth = dateofbirth
+        self.today = today
  
         load_dotenv()
         self.subscription_key_name = os.environ.get("SUBSCRIPTION_KEY_NAME")
@@ -54,27 +55,26 @@ class ExternalValidationHandler():
             return self.return_states['details_not_matched']
 
         # check if user date of birth is not over sixteen
-        if not self.user_over_sixteen(response):
+        if not self.get_age_today(self.dateofbirth) >= 16:
             return self.return_states['not_over_sixteen']
 
         return self.return_states['found']
 
-    def user_over_sixteen(self, today=datetime.now()) -> bool:
+    def get_age_today(self, dateofbirth) -> int:
 
-        date_object = datetime.strptime(self.dateofbirth, "%d-%m-%Y")
-        date_object_plus_sixteen = date_object + relativedelta(years=16)
-
-        if date_object_plus_sixteen > today:
-            return False
-
-        return True
+        born = datetime.strptime(dateofbirth, "%d-%m-%Y")
+        today = self.today 
+        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
     def user_data_matches(self, response: requests.Response) -> bool:
 
         if self.make_fullname_string() != response.json()['name'].lower():
             return False
 
-        if self.dateofbirth != response.json['born']:
+        input_age = self.get_age_today(self.dateofbirth)
+        age_from_api_response = self.get_age_today(response.json()['born'])
+
+        if input_age != age_from_api_response:
             return False
 
         return True

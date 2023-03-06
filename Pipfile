@@ -9,6 +9,7 @@ pytest = "*"
 python-dotenv = "*"
 requests = "*"
 python-dateutil = "*"
+pytest-recording = "*"
 
 [dev-packages]
 black = "*"
