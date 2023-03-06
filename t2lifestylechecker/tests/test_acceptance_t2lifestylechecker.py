@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 from flask_login import current_user
 from application.app_factory import create_app
+from application.auth import Auth
 import application.config as config
 
 
@@ -95,6 +96,9 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
 @pytest.mark.vcr
 def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match():
     app = create_app(config.Testing())
+
+    auth = Auth()
+    load_user = auth.init_app(app)
 
     form_data = {
         'nhsnumber': '444555666',

@@ -2,6 +2,7 @@ import sys
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect
 from flask_login import login_required, current_user, login_user, UserMixin
+from application.auth import User
 from . templates_init import jinja_env
 from . external_validation_handler import ExternalValidationHandler
 from . valid_results import external_api_valid_results
@@ -44,7 +45,6 @@ def validate():
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)
 
-    from app import User
     user = User(nhsnumber)
     login_user(user)
     return redirect('questionnaire')
