@@ -97,9 +97,6 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
 def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match():
     app = create_app(config.Testing())
 
-    auth = Auth()
-    load_user = auth.init_app(app)
-
     form_data = {
         'nhsnumber': '444555666',
         'firstname': 'Charles',

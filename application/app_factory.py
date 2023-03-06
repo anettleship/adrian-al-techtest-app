@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_login import LoginManager
 from dotenv import load_dotenv
+from application.auth import Auth
 from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
 
 
@@ -15,6 +16,9 @@ def create_app(application_config):
     app = Flask(__name__)
     app.config.from_object(application_config)
     register_blueprints(app)
+
+    auth = Auth()
+    load_user = auth.init_app(app)
 
     return app
 

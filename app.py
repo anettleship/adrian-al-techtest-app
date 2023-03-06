@@ -14,9 +14,6 @@ stage_name = os.environ.get("STAGE")
 application_config = stage_list[stage_name]()
 app = create_app(application_config)
 
-auth = Auth()
-load_user = auth.init_app(app)
-
 
 def main(app):
     app.run()
