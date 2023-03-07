@@ -22,6 +22,10 @@ pytest --record-mode=once
 Note: the external api does not return consistent date of birth for the same nhsnumber. We validate
 user input using age rather than exact date of birth as a result, and tests use a 'pre-recorded' response using pytest-recording, but might fail erroneously if that response is 're-recorded'.
 
+That is not true, the external api provides a consistent date of birth but varies the year to preserve age in the requirements for each individual as time passes. One item to be addressed is to use the requirements age as an input for the tests, so the age in the requirements is tracked by the tests - otherwise within a years time, all our tests will need to have their date of birth years incremented.
+
+Scoring, specifications are ambiguous, I went with 41-64 and then 65+
+
 Instructions to install and run on a local machine using the Flask inbuilt testing server:
 
 Install Python 3.11.2:

@@ -15,6 +15,7 @@ class ExternalValidationHandler():
         self.lastname = lastname
         self.dateofbirth = dateofbirth
         self.today = today
+        self.user_age = None
  
         load_dotenv()
 
@@ -64,10 +65,10 @@ class ExternalValidationHandler():
 
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
         api_date_format_str = os.environ.get("API_DATE_FORMAT_STRING")
-        input_age = self.get_age_today(self.dateofbirth, form_date_format_str)
-        age_from_api_response = self.get_age_today(response.json()['born'], api_date_format_str)
 
-        if input_age != age_from_api_response:
+        form_dateofbirth_dt = datetime.strptime(self.dateofbirth, form_date_format_str)
+        api_dateofbirth_dt = datetime.strptime(response.json()['born'], api_date_format_str)
+        if form_dateofbirth_dt != api_dateofbirth_dt:
             return False
 
         return True

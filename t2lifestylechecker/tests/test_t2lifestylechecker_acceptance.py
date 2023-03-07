@@ -5,6 +5,7 @@ from application.app_factory import create_app
 from application.auth import Auth, User
 from application.config_load import application_config
 import application.config as config
+from t2lifestylechecker.questionnaire_data import questionnaire_data
 from bs4 import BeautifulSoup
 
 
@@ -90,12 +91,12 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
         'nhsnumber': '555666777',
         'firstname': 'Megan',
         'lastname': 'May',
-        'dateofbirth': '2006-11-15',
+        'dateofbirth': '2008-11-14',
     }
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-    assert "Your details could not be found" in response.text
+    assert 'You are not eligble for this service' in response.text
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -106,7 +107,7 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
         'nhsnumber': '444555666',
         'firstname': 'Charles',
         'lastname': 'Bond',
-        'dateofbirth': '1953-02-28',
+        'dateofbirth': '1952-07-18',
     }
 
     with app.test_client() as test_client:
@@ -125,25 +126,6 @@ def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_
     assert response.status_code == 401 
 
 
-questionnaire_data = {
-    'Q1': {
-        "name": 'q1',
-        "question_text": 'this is q1',
-        "answers": {
-            "Yes": 0,
-            "No": 10,
-        },
-    },
-    'Q2': {
-        "name": 'q2',
-        "question_text": 'this is q1',
-        "answers": {
-            "Yes": 0,
-            "No": 10,
-        },
-    },
-}
-
 
 def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expected_html_elements_for_logged_in_user():
     app = create_app(config.Testing())
@@ -160,6 +142,5 @@ def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expect
     
             assert response.status_code == 200
             assert soup.title.string == question_form_title 
-            assert soup.find(name="radio", attrs={"name": "q1"})
-
-
+            assert soup.find(id="q1")
+            assert soup.find(name="button", attrs={"name": "submit"}) 

@@ -9,6 +9,7 @@ from . external_validation_handler import ExternalValidationHandler
 from . valid_results import external_api_valid_results
 from . localisation.external_api_return_messages_text import externalvalidationhandler_message_localisations
 from . t2lifestylechecker_helper import get_localised_message
+from . questionnaire_data import questionnaire_data
 
 
 application_name = "t2lifestylechecker"
@@ -58,24 +59,6 @@ def validate():
 @login_required
 def questionnaire():
 
-    questionnaire_data = {
-        'Q1': {
-            "name": 'q1',
-            "question_text": 'this is q1',
-            "answers": {
-                "Yes": 0,
-                "No": 10,
-            },
-        },
-        'Q2': {
-            "name": 'q2',
-            "question_text": 'this is q1',
-            "answers": {
-                "Yes": 0,
-                "No": 10,
-            },
-        },
-    }
     template = jinja_env.get_template("questionnaire.html")
     questionnaire_title = application_config.question_form_title
     return template.render(title=questionnaire_title, questionnaire=questionnaire_data)

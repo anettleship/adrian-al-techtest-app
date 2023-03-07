@@ -23,9 +23,10 @@ def test_ExternalValidationHandler_call_validation_api_should_return_requests_re
 
 known_api_transactions = [
     ('123456789', 'Kent', 'Beck', '1961-03-31', 'not_found'),
-    ('111222333', 'John', 'Doe', '2005-02-11', 'found'),
+    ('111222333', 'John', 'Doe', '2005-01-14', 'found'),
+    ('111222333', 'John', 'Doe', '2005-01-15', 'details_not_matched'),
     ('111222333', 'John', 'Doe', '2001-01-08', 'details_not_matched'),
-    ('555666777', 'Megan', 'May', '2006-11-15', 'not_over_sixteen'),
+    ('555666777', 'Megan', 'May', '2008-11-14', 'not_over_sixteen'),
 ]
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -111,9 +112,10 @@ def test_ExternalValidationHandler_make_fullname_string_should_not_be_case_sensi
 
 
 known_api_transactions_matches = [
-    ('111222333', 'John', 'Doe', '2004-11-04', True),
+    ('111222333', 'John', 'Doe', '2005-01-14', True),
     ('111222333', 'John', 'Doe', '2001-11-04', False),
-    ('555666777', 'Megan', 'May', '2006-11-15', True),
+    ('555666777', 'Megan', 'May', '2008-11-14', True),
+    ('555666777', 'Megan', 'May', '2008-11-15', False),
 ]
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
