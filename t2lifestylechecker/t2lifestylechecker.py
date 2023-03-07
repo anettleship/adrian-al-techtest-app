@@ -2,14 +2,14 @@ import sys
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect
 from flask_login import login_required, login_user
-from application.config_load import application_config
+from application.config_load import application_config, questionnaire_data
 from application.auth import User
 from . templates_init import jinja_env
 from . external_validation_handler import ExternalValidationHandler
 from . valid_results import external_api_valid_results
 from . localisation.external_api_return_messages_text import externalvalidationhandler_message_localisations
 from . t2lifestylechecker_helper import get_localised_message
-from . questionnaire_data import questionnaire_data
+
 
 
 application_name = "t2lifestylechecker"

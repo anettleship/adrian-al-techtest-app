@@ -3,9 +3,8 @@ from flask import current_app, session
 from flask_login import current_user, login_user, LoginManager
 from application.app_factory import create_app
 from application.auth import Auth, User
-from application.config_load import application_config
+from application.config_load import application_config, questionnaire_data
 import application.config as config
-from t2lifestylechecker.questionnaire_data import questionnaire_data
 from bs4 import BeautifulSoup
 
 

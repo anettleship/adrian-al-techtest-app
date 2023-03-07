@@ -17,6 +17,7 @@ class Config:
         self.SECRET_KEY = os.environ.get("SECRET_KEY")
         self.login_form_title = os.environ.get("LOGIN_FORM_TITLE")
         self.question_form_title = os.environ.get("QUESTION_FORM_TITLE")
+        self.question_data_path = os.environ.get("QUESTION_DATA_PATH")
 
 
 class Testing(Config):
