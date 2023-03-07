@@ -57,6 +57,25 @@ def validate():
 @t2lifestylechecker.route("/questionnaire")
 @login_required
 def questionnaire():
-    template = jinja_env.get_template("base.html")
+
+    questionnaire_data = {
+        'Q1': {
+            "name": 'q1',
+            "question_text": 'this is q1',
+            "answers": {
+                "Yes": 0,
+                "No": 10,
+            },
+        },
+        'Q2': {
+            "name": 'q2',
+            "question_text": 'this is q1',
+            "answers": {
+                "Yes": 0,
+                "No": 10,
+            },
+        },
+    }
+    template = jinja_env.get_template("questionnaire.html")
     questionnaire_title = application_config.question_form_title
-    return template.render(title=questionnaire_title)
+    return template.render(title=questionnaire_title, questionnaire=questionnaire_data)

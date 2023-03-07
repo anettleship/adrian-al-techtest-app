@@ -125,6 +125,25 @@ def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_
     assert response.status_code == 401 
 
 
+questionnaire_data = {
+    'Q1': {
+        "name": 'q1',
+        "question_text": 'this is q1',
+        "answers": {
+            "Yes": 0,
+            "No": 10,
+        },
+    },
+    'Q2': {
+        "name": 'q2',
+        "question_text": 'this is q1',
+        "answers": {
+            "Yes": 0,
+            "No": 10,
+        },
+    },
+}
+
 
 def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expected_html_elements_for_logged_in_user():
     app = create_app(config.Testing())
@@ -141,3 +160,6 @@ def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expect
     
             assert response.status_code == 200
             assert soup.title.string == question_form_title 
+            assert soup.find(name="radio", attrs={"name": "q1"})
+
+
