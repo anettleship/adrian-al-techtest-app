@@ -126,8 +126,21 @@ def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_
     assert response.status_code == 401 
 
 
+def test_t2lifestylechecker_questionnaire_route_should_return_sucesss_for_logged_in_user():
+    app = create_app(config.Testing())
 
-def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expected_html_elements_for_logged_in_user():
+    question_form_title = application_config.question_form_title
+    
+    with app.test_request_context("/questionnaire", method="GET"):
+        with app.test_client() as test_client:
+            test_user = User('123456789')
+            login_user(test_user)
+            response = test_client.get("/questionnaire")
+    
+            assert response.status_code == 200
+
+
+def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_answer_html_elements_for_logged_in_user():
     app = create_app(config.Testing())
 
     question_form_title = application_config.question_form_title
@@ -140,7 +153,11 @@ def test_t2lifestylechecker_questionnaire_route_should_return_sucess_with_expect
 
             soup = BeautifulSoup(response.data, 'html.parser')
     
-            assert response.status_code == 200
             assert soup.title.string == question_form_title 
-            assert soup.find(id="q1")
-            assert soup.find(name="button", attrs={"name": "submit"}) 
+
+            for question in questionnaire_data['questions']:
+                assert soup.find(id=question['name'])
+                for answer in question['answers']:
+                    assert len(soup.find_all('input', {'type': 'radio', 'name': f"{question['name']}.{answer}"})) == 1
+
+            assert soup.find(name="button", attrs={"name": "submit"})

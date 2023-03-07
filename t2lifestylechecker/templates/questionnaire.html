@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="container-sm">
-
     <form action="validate" method="post">
-      {% for question, data in questionnaire.items() %}
-        <p>{{ question }} {{ data.question_text }}</p>
-        {% for answer_text, value in data.answers.items() %}
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="{{ data.name }}" id="{{ data.name }}" value="{{ answer_text }}">
-          <label class="form-check-label" for="{{ data.name }}">{{ answer_text}}</label>
-        </div>
+
+      {% for question_data in questionnaire.questions %}
+        <div id="{{ question_data.name }}">
+          <p>{{ question_data.name }}: {{ question_data.text }}</p>
+
+          {% for answer_text, value in question_data.answers.items() %}
+          <div class="form-check form-check-inline mb-3">
+            <input class="form-check-input" type="radio" name="{{ question_data.name }}.{{ answer_text }}" id="{{ question_data.name }}.{{ answer_text }}" value="{{ question_data.text }}">
+            <label class="form-check-label" for="{{ question_data.name }}.{{ answer_text }}">{{ answer_text }}</label>
+          </div>
         {% endfor %}
+
+      </div> 
       {% endfor %}
 
       <div class="mb-3"></div>
         <button class="btn btn-primary" name="submit" type="submit">Submit</button>
       </div>
     </form>
-
-  </div>
 {% endblock %}
