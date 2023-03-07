@@ -38,6 +38,7 @@ def validate():
     dateofbirth = request.form["dateofbirth"]
 
     with current_app.app_context():
+        # TODO REMOVE THIS!.question
         config = current_app.config
         validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth)
 
@@ -57,4 +58,5 @@ def validate():
 @login_required
 def questionnaire():
     template = jinja_env.get_template("base.html")
-    return template.render(title="Questionnaire")
+    questionnaire_title = application_config.question_form_title
+    return template.render(title=questionnaire_title)

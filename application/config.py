@@ -16,6 +16,7 @@ class Config:
         # Do not set a default secret key, we want application launch to fail by default if none set as part of application health checks
         self.SECRET_KEY = os.environ.get("SECRET_KEY")
         self.login_form_title = os.environ.get("LOGIN_FORM_TITLE")
+        self.question_form_title = os.environ.get("QUESTION_FORM_TITLE")
 
 
 class Testing(Config):
