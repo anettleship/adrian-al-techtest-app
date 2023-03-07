@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container-sm">
+
+    <form action="validate" method="post">
+
+      <div class="form-group"> 
+        <div class="mb-3">
+          <label for="nhsnumber" class="form-label">NHS Number</label>
+          <input type="number" class="form-control" id="nhsnumber" name="nhsnumber" placeholder="123456789">
+        </div>
+
+        <div class="input-group">
+          <div class="mb-3">
+            <label for="firstname" class="form-label">First Name</label>
+            <input class="form-control" id="firstname" name="firstname">
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label">Last Name</label>
+            <input class="form-control" id="lastname" name="lastname" >
+          </div>
+        </div>
+
+        <label class="control-label" for="dateofbirth">Date of Birth</label>
+        <div class="mb-3">
+          <input class="form-control" id="dateofbirth" name="dateofbirth" placeholder="DD/MM/YYYY" type="date"/>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary" name="submit" type="submit">Submit</button>
+        </div>
+
+      </div>
+    </form>
+{% endblock %}

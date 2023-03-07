@@ -23,7 +23,7 @@ def test_ExternalValidationHandler_call_validation_api_should_return_requests_re
 
 known_api_transactions = [
     ('123456789', 'Kent', 'Beck', '1961-03-31', 'not_found'),
-    ('111222333', 'John', 'Doe', '2004-06-21', 'found'),
+    ('111222333', 'John', 'Doe', '2005-02-11', 'found'),
     ('111222333', 'John', 'Doe', '2001-01-08', 'details_not_matched'),
     ('555666777', 'Megan', 'May', '2006-11-15', 'not_over_sixteen'),
 ]

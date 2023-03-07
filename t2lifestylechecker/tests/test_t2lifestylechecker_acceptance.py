@@ -3,23 +3,28 @@ from flask import url_for
 from flask_login import current_user
 from application.app_factory import create_app
 from application.auth import Auth
+from application.config_load import application_config
 import application.config as config
+from bs4 import BeautifulSoup
 
 
-def test_t2lifestylechecker_should_return_http_success_from_default_route():
+
+def test_t2lifestylechecker_should_return_sucess_with_expected_html_elements():
     app = create_app(config.Testing())
 
+    form_title = application_config.login_form_title
+    
     with app.test_client() as test_client:
         response = test_client.get("/")
-        assert response.status_code == 200
 
-
-def test_t2lifestylechecker_should_return_text_NHS_in_html_response_from_default_route():
-    app = create_app(config.Testing())
-
-    with app.test_client() as test_client:
-        response = test_client.get("/")
-        assert "NHS" in response.text
+    soup = BeautifulSoup(response.data, 'html.parser')
+    
+    assert response.status_code == 200
+    assert soup.title.string == form_title 
+    assert soup.find(name="input", attrs={"name": "firstname"})
+    assert soup.find(name="input", attrs={"name": "lastname"})
+    assert soup.find(name="input", attrs={"name": "dateofbirth"})
+    assert soup.find(name="button", attrs={"name": "submit"}) 
 
 
 def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint_static_js_folder():
@@ -27,7 +32,7 @@ def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint
 
     with app.test_client() as test_client:
         response = test_client.get("/js/testfile.js")
-        assert response.status_code == 200
+    assert response.status_code == 200
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -43,7 +48,7 @@ def test_t2lifestylechecker_validate_route_should_return_response_to_post_data()
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-        assert response.status_code == 200
+    assert response.status_code == 200
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_invalid_user():
@@ -58,7 +63,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-        assert "Your details could not be found" in response.text
+    assert "Your details could not be found" in response.text
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -74,7 +79,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-        assert "Your details could not be found" in response.text
+    assert "Your details could not be found" in response.text
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -90,7 +95,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
 
     with app.test_client() as test_client:
         response = test_client.post("/validate", data=form_data)
-        assert "Your details could not be found" in response.text
+    assert "Your details could not be found" in response.text
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
