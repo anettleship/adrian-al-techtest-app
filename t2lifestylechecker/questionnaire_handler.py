@@ -55,7 +55,7 @@ class QuestionnaireHandler():
             self.questionnaire_validity = questionnaire_validity_states['valid']
 
 
-    def check_answer_points_for_all_age_ranges(self):
+    def check_answer_points_for_all_age_ranges(self) -> bool:
 
         age_range_count = len(self.question_data['age_range_maximums'])
         points_count_per_answer = age_range_count + 1
@@ -68,3 +68,22 @@ class QuestionnaireHandler():
                     return False
 
         return True
+
+    def calculate_points(self, age: int, answers: list) -> int:
+
+        age_index = self.get_age_index(age, self.question_data['age_range_maximums'])
+
+        points = 0
+
+        for question_index, answer in enumerate(answers):
+            points += self.question_data['questions'][question_index]['answers'][answer][age_index]
+
+        return points
+
+    def get_age_index(self, age: int, age_range_maximums: list) -> int:
+
+        for i, max_age in enumerate(age_range_maximums):
+            if age <= max_age:
+                return i
+
+        return len(age_range_maximums)

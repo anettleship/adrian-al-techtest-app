@@ -37,6 +37,7 @@ Validity checking:
 # min age not int
 # no age range maximums set
 # age range maximums not int
+# age range maxiumums not sorted low to high
 # no questions property set
 # questions length is 0
 # question missing any of name, text, answers, and check if any fields length is 0
