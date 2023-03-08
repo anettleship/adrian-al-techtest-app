@@ -13,7 +13,8 @@ def test_QuestionnaireHandler_load_question_data_should_load_three_questions_fro
 
     assert len(questionnaire_handler.question_data['questions']) == 3
 
-def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_validity_to_not_checked_with_not_data_loaded():
+
+def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_validity_to_not_checked_before_data_loaded():
 
     questionnaire_handler = QuestionnaireHandler()
 

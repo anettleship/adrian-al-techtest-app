@@ -23,4 +23,5 @@ class QuestionnaireHandler():
 
     def validate_question_data(self):
 
-        self.questionnaire_validity = questionnaire_validity_states['valid']
+        if self.question_data != None:
+            self.questionnaire_validity = questionnaire_validity_states['valid']
