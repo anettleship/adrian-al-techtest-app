@@ -114,6 +114,23 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
         assert current_user.is_authenticated
 
 
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
+def test_t2lifestylechecker_validate_route_should_return_current_user_with_age_and_id():
+    app = create_app(config.Testing())
+
+    form_data = {
+        'nhsnumber': '444555666',
+        'firstname': 'Charles',
+        'lastname': 'Bond',
+        'dateofbirth': '1952-07-18',
+    }
+
+    with app.test_client() as test_client:
+        response = test_client.post("/validate_login", data=form_data)
+        assert current_user.age == 70
+        assert current_user.id == form_data['nhsnumber']
+
+
 def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_user_not_logged_in():
     app = create_app(config.Testing())
 

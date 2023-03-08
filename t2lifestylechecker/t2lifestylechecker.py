@@ -48,7 +48,7 @@ def validate():
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)
 
-    user = T2User(nhsnumber)
+    user = T2User(nhsnumber, validator.user_age)
     login_user(user)
     return redirect('questionnaire')
 
