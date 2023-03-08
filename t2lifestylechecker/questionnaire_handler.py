@@ -21,10 +21,14 @@ questionnaire_validity_messages = Enum(
 
 class QuestionnaireHandler():
 
-    def __init__(self):
+    def __init__(self, question_data_path=None):
         self.question_data = None
         self.questionnaire_validity = questionnaire_validity_states['not_checked']
         self.validity_message = None
+
+        if question_data_path:
+            self.load_question_data(question_data_path)
+            self.validate_question_data()
 
     def load_question_data(self, question_data_path: str):
 

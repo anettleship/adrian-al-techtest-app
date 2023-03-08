@@ -162,3 +162,11 @@ def test_QuestionnaireHandler_calculate_points_should_return_correct_points_for_
     questionnaire_handler.validate_question_data()
 
     assert questionnaire_handler.calculate_points(age, answers) == expected
+
+
+def test_QuestionnaireHandler_should_load_and_validate_questionnaire_data_automatically_when_initialised_with_a_question_data_path():
+
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
+
+    assert questionnaire_handler.questionnaire_validity == questionnaire_validity_states['valid']
