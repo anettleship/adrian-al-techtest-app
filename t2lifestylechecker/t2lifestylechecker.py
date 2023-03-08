@@ -63,6 +63,7 @@ def questionnaire():
 
 
 @t2lifestylechecker.route("/calculate_score", methods=["POST"])
+@login_required
 def calculate():
 
     return "Score displayed Here"

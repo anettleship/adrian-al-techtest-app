@@ -178,7 +178,7 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
 
             assert soup.find(name="button", attrs={"name": "submit"})
 
-def test_t2lifestylechecker_calculate_score_route_should_return_sucess_from_post_request_for_logged_in_user():
+def test_t2lifestylechecker_calculate_score_route_should_return_success_from_post_request_for_logged_in_user():
     app = create_app(config.Testing())
 
     with app.test_request_context("/validate_login", method="POST"):
@@ -188,3 +188,12 @@ def test_t2lifestylechecker_calculate_score_route_should_return_sucess_from_post
             response = test_client.post("/calculate_score")
 
     assert response.status_code == 200
+
+
+def test_t2lifestylechecker_calculate_score_route_should_return_unauthorised_when_user_not_logged_in():
+    app = create_app(config.Testing())
+
+    with app.test_client() as test_client:
+        response = test_client.post("/calculate_score")
+
+    assert response.status_code == 401 

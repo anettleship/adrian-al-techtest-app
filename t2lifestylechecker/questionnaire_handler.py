@@ -24,7 +24,7 @@ class QuestionnaireHandler():
     def __init__(self):
         self.question_data = None
         self.questionnaire_validity = questionnaire_validity_states['not_checked']
-        self.validity_message = str() 
+        self.validity_message = None
 
     def load_question_data(self, question_data_path: str):
 
