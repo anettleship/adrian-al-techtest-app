@@ -15,6 +15,7 @@ beautifulsoup4 = "*"
 
 [dev-packages]
 black = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.11"

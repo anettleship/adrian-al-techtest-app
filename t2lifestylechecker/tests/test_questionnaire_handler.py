@@ -45,6 +45,15 @@ def test_QuestionnaireHandler_load_question_data_question_data_should_set_questi
     assert questionnaire_handler.validity_message == questionnaire_validity_messages['json could not be parsed']
 
 
+def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_validity_to_not_valid_if_no_question_data_loaded():
+
+    questionnaire_handler = QuestionnaireHandler()
+
+    questionnaire_handler.validate_question_data()
+
+    assert questionnaire_handler.questionnaire_validity ==  questionnaire_validity_states['not_valid']
+
+
 def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_validity_to_valid_if_no_issues_found():
 
     questionnaire_handler = QuestionnaireHandler()

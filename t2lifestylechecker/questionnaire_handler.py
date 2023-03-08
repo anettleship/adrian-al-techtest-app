@@ -43,16 +43,15 @@ class QuestionnaireHandler():
 
     def validate_question_data(self):
 
-        valid_so_far = True
-
         if self.question_data == None:
-            valid_so_far = False
+            self.questionnaire_validity = questionnaire_validity_states['not_valid']
+            return
 
         if not self.check_answer_points_for_all_age_ranges():
-            valid_so_far = False
-
-        if valid_so_far:
-            self.questionnaire_validity = questionnaire_validity_states['valid']
+            self.questionnaire_validity = questionnaire_validity_states['not_valid']
+            return
+        
+        self.questionnaire_validity = questionnaire_validity_states['valid']
 
 
     def check_answer_points_for_all_age_ranges(self) -> bool:

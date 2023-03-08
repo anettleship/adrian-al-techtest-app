@@ -24,6 +24,8 @@ user input using age rather than exact date of birth as a result, and tests use 
 
 That is not true, the external api provides a consistent date of birth but varies the year to preserve age in the requirements for each individual as time passes. One item to be addressed is to use the requirements age as an input for the tests, so the age in the requirements is tracked by the tests - otherwise within a years time, all our tests will need to have their date of birth years incremented.
 
+Mention test coverage
+
 Scoring, specifications are ambiguous, I went with 41-64 and then 65+
 
 Validity checking:
