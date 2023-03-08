@@ -1,10 +1,9 @@
 import sys
 import os
-from flask import Blueprint, current_app, send_from_directory, request, redirect
-from flask_login import login_required, login_user
+from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for
+from flask_login import login_required, login_user, current_user
 from application.config_load import application_config, questionnaire_data
-from application.auth import User
-from . templates_init import jinja_env
+from . t2lifestylechecker_config import jinja_env, questionniare_handler, T2User
 from . external_validation_handler import ExternalValidationHandler
 from . valid_results import external_api_valid_results
 from . localisation.external_api_return_messages_text import externalvalidationhandler_message_localisations
@@ -22,7 +21,8 @@ t2lifestylechecker = Blueprint(application_name, __name__)
 def index():
     template = jinja_env.get_template("login.html")
     form_title = application_config.login_form_title
-    return template.render(title=form_title)
+    validate_url = url_for(f'{application_name}.validate')
+    return template.render(title=form_title, form_action_url=validate_url)
 
 
 @t2lifestylechecker.route("/js/<path:filename>")
@@ -39,8 +39,6 @@ def validate():
     dateofbirth = request.form["dateofbirth"]
 
     with current_app.app_context():
-        # TODO REMOVE THIS!.question
-        config = current_app.config
         validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth)
 
     result = validator.validate_details()
@@ -50,7 +48,7 @@ def validate():
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)
 
-    user = User(nhsnumber)
+    user = T2User(nhsnumber)
     login_user(user)
     return redirect('questionnaire')
 

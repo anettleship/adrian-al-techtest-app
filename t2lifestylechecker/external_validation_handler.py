@@ -47,7 +47,9 @@ class ExternalValidationHandler():
 
         # check if user date of birth is not over sixteen
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
-        if not self.get_age_today(self.dateofbirth, form_date_format_str) >= 16:
+        self.user_age = self.get_age_today(self.dateofbirth, form_date_format_str)
+
+        if not self.user_age >= 16:
             return external_api_valid_results['not_over_sixteen']
 
         return external_api_valid_results['found']
