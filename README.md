@@ -26,6 +26,22 @@ That is not true, the external api provides a consistent date of birth but varie
 
 Scoring, specifications are ambiguous, I went with 41-64 and then 65+
 
+Validity checking:
+
+
+# cannot load json
+# cannot parse json
+# any answer points length does not match age range maximums list + 1
+
+# no min age
+# min age not int
+# no age range maximums set
+# age range maximums not int
+# no questions property set
+# questions length is 0
+# question missing any of name, text, answers, and check if any fields length is 0
+
+
 Instructions to install and run on a local machine using the Flask inbuilt testing server:
 
 Install Python 3.11.2:

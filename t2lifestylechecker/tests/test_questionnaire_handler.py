@@ -70,14 +70,5 @@ def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_va
     assert questionnaire_handler.questionnaire_validity ==  questionnaire_validity_states['not_valid']
     assert questionnaire_handler.validity_message == questionnaire_validity_messages['all answers must have list of points equal to age range maximums plus one']
 
-# cannot parse json
-# no min age
-# min age not int
-# no age range maximums set
-# age range maximums not int
-# any answer points length does not match age range maximums list + 1
-# no questions property set
-# questions length is 0
-# question missing any of name, text, answers, and check if any fields length is 0
 
 
