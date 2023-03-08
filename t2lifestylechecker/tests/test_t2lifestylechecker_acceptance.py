@@ -36,7 +36,7 @@ def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
-def test_t2lifestylechecker_validate_route_should_return_response_to_post_data():
+def test_t2lifestylechecker_validate_route_should_return_success_from_post_request():
     app = create_app(config.Testing())
 
     form_data = {
@@ -177,3 +177,14 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
                     assert len(soup.find_all('input', {'type': 'radio', 'name': f"{question['name']}.{answer}"})) == 1
 
             assert soup.find(name="button", attrs={"name": "submit"})
+
+def test_t2lifestylechecker_calculate_score_route_should_return_sucess_from_post_request_for_logged_in_user():
+    app = create_app(config.Testing())
+
+    with app.test_request_context("/validate_login", method="POST"):
+        with app.test_client() as test_client:
+            test_user = User('123456789')
+            login_user(test_user)
+            response = test_client.post("/calculate_score")
+
+    assert response.status_code == 200

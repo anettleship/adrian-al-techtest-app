@@ -60,3 +60,9 @@ def questionnaire():
     template = jinja_env.get_template("questionnaire.html")
     questionnaire_title = application_config.question_form_title
     return template.render(title=questionnaire_title, questionnaire=questionnaire_data)
+
+
+@t2lifestylechecker.route("/calculate_score", methods=["POST"])
+def calculate():
+
+    return "Score displayed Here"
