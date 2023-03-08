@@ -30,7 +30,7 @@ def static_js(filename):
     return send_from_directory(f'../{application_name}/static/js', filename)
 
 
-@t2lifestylechecker.route("/validate", methods=["POST"])
+@t2lifestylechecker.route("/validate_login", methods=["POST"])
 def validate():
     
     nhsnumber = request.form["nhsnumber"]

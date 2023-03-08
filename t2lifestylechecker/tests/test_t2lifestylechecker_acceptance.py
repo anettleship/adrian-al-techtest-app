@@ -47,7 +47,7 @@ def test_t2lifestylechecker_validate_route_should_return_response_to_post_data()
     }
 
     with app.test_client() as test_client:
-        response = test_client.post("/validate", data=form_data)
+        response = test_client.post("/validate_login", data=form_data)
     assert response.status_code == 200
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -62,7 +62,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
     }
 
     with app.test_client() as test_client:
-        response = test_client.post("/validate", data=form_data)
+        response = test_client.post("/validate_login", data=form_data)
     assert "Your details could not be found" in response.text
 
 
@@ -78,7 +78,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
     }
 
     with app.test_client() as test_client:
-        response = test_client.post("/validate", data=form_data)
+        response = test_client.post("/validate_login", data=form_data)
     assert "Your details could not be found" in response.text
 
 
@@ -94,7 +94,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
     }
 
     with app.test_client() as test_client:
-        response = test_client.post("/validate", data=form_data)
+        response = test_client.post("/validate_login", data=form_data)
     assert 'You are not eligble for this service' in response.text
 
 
@@ -110,7 +110,7 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
     }
 
     with app.test_client() as test_client:
-        response = test_client.post("/validate", data=form_data)
+        response = test_client.post("/validate_login", data=form_data)
         assert current_user.is_authenticated
 
 
@@ -144,7 +144,7 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
 
     question_form_title = application_config.question_form_title
     
-    with app.test_request_context("/questionnaire", method="GET"):
+    with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
             test_user = User('123456789')
             login_user(test_user)
