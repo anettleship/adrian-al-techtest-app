@@ -7,7 +7,7 @@ from application.config_load import application_config
 from application.auth import User
 from .t2lifestylechecker_config import external_api_valid_results
 from .external_validation_handler import ExternalValidationHandler
-from .external_validation_handler_helper import get_localised_message
+from .external_validation_handler_helper import get_localised_message, obfuscate_string_base64
 from . questionnaire_handler import QuestionnaireHandler
 
 application_name = "t2lifestylechecker"
@@ -54,7 +54,8 @@ def validate():
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)
 
-    user = User(nhsnumber)
+    obfuscate_nhsnumber = obfuscate_string_base64(nhsnumber)
+    user = User(obfuscate_nhsnumber)
     session["user_age"] = validator.user_age
     login_user(user)
     return redirect('questionnaire')

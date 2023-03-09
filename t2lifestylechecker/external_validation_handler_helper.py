@@ -1,3 +1,4 @@
+import base64
 
 externalvalidationhandler_message_localisations = {
     'en-gb': {
@@ -12,3 +13,17 @@ externalvalidationhandler_message_localisations = {
 def get_localised_message(result_object, language):
 
     return externalvalidationhandler_message_localisations[language][result_object.name]
+
+
+def obfuscate_string_base64(input):
+
+    message_bytes = input.encode('ascii')
+    encoded = base64.b64encode(message_bytes)
+
+    return encoded.decode('ascii')
+
+def decode_string_base64(encoded_input):
+
+    base64_bytes = encoded_input.encode('ascii')
+    message_bytes = base64.b64decode(base64_bytes)
+    return message_bytes.decode('ascii')

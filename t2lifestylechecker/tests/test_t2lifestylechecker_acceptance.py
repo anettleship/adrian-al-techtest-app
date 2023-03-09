@@ -5,6 +5,7 @@ from application.app_factory import create_app
 from application.auth import User
 from application.config_load import application_config
 from t2lifestylechecker.t2lifestylechecker import questionnaire_handler
+from t2lifestylechecker.external_validation_handler_helper import obfuscate_string_base64
 import application.config as config
 from bs4 import BeautifulSoup
 
@@ -116,7 +117,23 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
-def test_t2lifestylechecker_validate_route_should_return_current_user_with_age_and_id():
+def test_t2lifestylechecker_validate_route_should_set_current_user_id_with_obfuscated_nhsnumber():
+    app = create_app(config.Testing())
+
+    form_data = {
+        'nhsnumber': '444555666',
+        'firstname': 'Charles',
+        'lastname': 'Bond',
+        'dateofbirth': '1952-07-18',
+    }
+
+    with app.test_client() as test_client:
+        test_client.post("/validate_login", data=form_data)
+        assert current_user.id == obfuscate_string_base64(form_data['nhsnumber'])
+    
+    
+@pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
+def test_t2lifestylechecker_validate_route_should_set_session_with_user_age():
     app = create_app(config.Testing())
 
     form_data = {
@@ -128,9 +145,7 @@ def test_t2lifestylechecker_validate_route_should_return_current_user_with_age_a
 
     with app.test_client() as test_client:
         response = test_client.post("/validate_login", data=form_data)
-        assert current_user.id == form_data['nhsnumber']
         assert session['user_age'] == 70
-    
     
 
 
