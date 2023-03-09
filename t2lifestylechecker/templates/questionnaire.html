@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <form action="validate" method="post">
+    <form action="{{ form_action_url }}" method="post">
 
       {% for question_data in questionnaire.questions %}
         <div id="{{ question_data.name }}">
