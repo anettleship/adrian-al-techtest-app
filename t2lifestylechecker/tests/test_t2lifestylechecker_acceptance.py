@@ -18,14 +18,14 @@ def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_
     with app.test_client() as test_client:
         response = test_client.get("/")
 
-    soup = BeautifulSoup(response.data, 'html.parser')
-    
-    assert response.status_code == 200
-    assert soup.title.string == form_title 
-    assert soup.find(name="input", attrs={"name": "firstname"})
-    assert soup.find(name="input", attrs={"name": "lastname"})
-    assert soup.find(name="input", attrs={"name": "dateofbirth"})
-    assert soup.find(name="button", attrs={"name": "submit"}) 
+        soup = BeautifulSoup(response.data, 'html.parser')
+        assert response.status_code == 200
+        assert soup.title.string == form_title 
+        assert soup.find(name="input", attrs={"name": "firstname"})
+        assert soup.find(name="input", attrs={"name": "lastname"})
+        assert soup.find(name="input", attrs={"name": "dateofbirth"})
+        assert soup.find(name="button", attrs={"name": "submit"}) 
+        assert soup.find('form', {'action': url_for('t2lifestylechecker.validate'), 'method': 'post'})
 
 
 def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint_static_js_folder():
