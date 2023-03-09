@@ -2,8 +2,8 @@ from enum import Enum
 
 
 
-external_api_valid_results = Enum(
-    'valid_results', [
+external_api_login_results = Enum(
+    'login_results', [
         'not_found',
         'details_not_matched',
         'not_over_sixteen',

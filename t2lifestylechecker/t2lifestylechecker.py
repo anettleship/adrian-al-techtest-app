@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
 from application.config_load import application_config
 from application.auth import User
-from .t2lifestylechecker_config import external_api_valid_results
+from .t2lifestylechecker_config import external_api_login_results
 from .external_validation_handler import ExternalValidationHandler
 from .external_validation_handler_helper import get_localised_message, obfuscate_string_base64
 from . questionnaire_handler import QuestionnaireHandler
@@ -49,7 +49,7 @@ def validate():
 
     result = validator.validate_details()
 
-    if not result == external_api_valid_results['found']:
+    if not result == external_api_login_results['found']:
 
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)

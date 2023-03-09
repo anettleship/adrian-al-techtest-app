@@ -3,7 +3,7 @@ import os
 from enum import Enum
 from dotenv import load_dotenv
 from datetime import datetime
-from .t2lifestylechecker_config import external_api_valid_results
+from .t2lifestylechecker_config import external_api_login_results
 
 
 class ExternalValidationHandler():
@@ -38,20 +38,20 @@ class ExternalValidationHandler():
     def process_response(self, response: requests.Response) -> Enum:
 
         if response.status_code != 200:
-            return external_api_valid_results['not_found']
+            return external_api_login_results['not_found']
 
         # check if user_data matches data in response
         if not self.user_data_matches(response):
-            return external_api_valid_results['details_not_matched']
+            return external_api_login_results['details_not_matched']
 
         # check if user date of birth is not over sixteen
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
         self.user_age = self.get_age_today(self.dateofbirth, form_date_format_str)
 
         if not self.user_age >= 16:
-            return external_api_valid_results['not_over_sixteen']
+            return external_api_login_results['not_over_sixteen']
 
-        return external_api_valid_results['found']
+        return external_api_login_results['found']
 
     def get_age_today(self, dateofbirth: str, date_format_str: str) -> int:
 

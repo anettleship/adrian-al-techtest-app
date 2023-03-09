@@ -1,5 +1,5 @@
 from t2lifestylechecker.external_validation_handler import ExternalValidationHandler
-from t2lifestylechecker.t2lifestylechecker_config import external_api_valid_results
+from t2lifestylechecker.t2lifestylechecker_config import external_api_login_results
 from t2lifestylechecker.tests.test_helpers import calculate_birth_year_from_constant_age_and_birthday
 from datetime import datetime
 import requests
@@ -60,7 +60,7 @@ def test_ExternalValidationHandler_process_response_should_return_expected_respo
 
     response = validator.call_validation_api() 
     
-    assert validator.process_response(response) == external_api_valid_results[expected]
+    assert validator.process_response(response) == external_api_login_results[expected]
 
 
 known_api_transactions_found = [
@@ -97,7 +97,7 @@ def test_ExternalValidationHandler_validate_details_executes_function_sequence_c
     today_object = datetime.strptime("2021-12-31", "%Y-%m-%d")
     validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth, today_object)
     
-    assert validator.validate_details() == external_api_valid_results[expected]
+    assert validator.validate_details() == external_api_login_results[expected]
 
 
 birtday_inputs = [
