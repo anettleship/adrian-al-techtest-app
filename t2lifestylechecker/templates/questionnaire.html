@@ -8,7 +8,7 @@
 
           {% for answer_text, value in question_data.answers.items() %}
           <div class="form-check form-check-inline mb-3">
-            <input class="form-check-input" type="radio" name="{{ question_data.name }}.{{ answer_text }}" id="{{ question_data.name }}.{{ answer_text }}" value="{{ question_data.text }}">
+            <input class="form-check-input" type="radio" name="{{ question_data.name }}" id="{{ question_data.name }}.{{ answer_text }}" value="{{ answer_text }}">
             <label class="form-check-label" for="{{ question_data.name }}.{{ answer_text }}">{{ answer_text }}</label>
           </div>
         {% endfor %}

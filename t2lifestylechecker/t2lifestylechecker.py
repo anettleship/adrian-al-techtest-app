@@ -74,12 +74,12 @@ def calculate():
     
     answers = list()
 
-    for index, answer in enumerate(request.form):
+    for index, question in enumerate(request.form):
         if index >= len(questionnaire_handler.question_data['questions']):
             break
         question_name = questionnaire_handler.question_data['questions'][index]['name']
-        if answer.startswith(question_name):
-            answer = answer.split(".")[1]
+        if question == question_name:
+            answer = request.form[question] 
             answers.append(answer)
 
     return questionnaire_handler.caluculate_message(age, answers)
