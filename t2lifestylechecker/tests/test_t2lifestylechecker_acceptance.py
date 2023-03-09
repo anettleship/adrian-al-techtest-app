@@ -177,12 +177,12 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
             for question in questionnaire_handler.question_data['questions']:
                 assert soup.find(id=question['name'])
                 for answer in question['answers']:
-                    assert len(soup.find_all('input', {'type': 'radio', 'name': f"{question['name']}.{answer}"})) == 1
+                    assert len(soup.find_all('input', {'type': 'radio', 'name': f"{question['name']}"})) == 2 
 
             assert soup.find(name="button", attrs={"name": "submit"})
             assert soup.find('form', {'action': url_for('t2lifestylechecker.calculate'), 'method': 'post'})
 
-def test_t2lifestylechecker_calculate_score_route_should_return_success_from_post_request_for_logged_in_user():
+def test_t2lifestylechecker_calculate_score_route_should_return_success_from_post_request_for_logged_in_user_with_age_set_in_session():
     app = create_app(config.Testing())
 
     with app.test_request_context("/validate_login", method="POST"):
@@ -221,14 +221,14 @@ known_questionnaire_result_for_age_and_answers = [
 ]
 
 @pytest.mark.parametrize("age,answers,score,expected", known_questionnaire_result_for_age_and_answers)
-def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_for_given_test_user_ages_and_answers(age, answers, score, expected):
+def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_for_given_test_user_ages_and_answers_with_logged_in_user_and_age_set_in_seesion(age, answers, score, expected):
     app = create_app(config.Testing())
     questionnaire_handler
     form_data = {
-        f'Q1.{answers[0]}': 'question_text',
-        f'Q2.{answers[1]}': 'question_text',
-        f'Q3.{answers[2]}': 'question_text',
-        f'Submit': '',
+        'Q1': f'{answers[0]}',
+        'Q2': f'{answers[1]}',
+        'Q3': f'{answers[2]}',
+        'Submit': '',
     }
 
     language = 'en-gb'
