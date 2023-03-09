@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, LoginManager
 from application.app_factory import create_app
 from application.auth import Auth, User
 from application.config_load import application_config
-from t2lifestylechecker.t2lifestylechecker_config import T2User, questionnaire_handler, QuestionnaireResultStates
+from t2lifestylechecker.t2lifestylechecker_config import questionnaire_handler
 import application.config as config
 from bs4 import BeautifulSoup
 

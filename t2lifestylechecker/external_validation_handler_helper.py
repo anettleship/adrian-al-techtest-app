@@ -7,3 +7,8 @@ externalvalidationhandler_message_localisations = {
         'found': 'This message is never used',
     }
 }
+
+
+def get_localised_message(result_object, language):
+
+    return externalvalidationhandler_message_localisations[language][result_object.name]
