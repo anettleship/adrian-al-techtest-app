@@ -43,7 +43,13 @@ Validity checking:
 # no questions property set
 # questions length is 0
 # question missing any of name, text, answers, and check if any fields length is 0
+# length of message maximums needs to be one less than length of messages list
+# json trailing commas
+# messages['states'] and dictionaries for each language match
 
+Build this out into a web form with validation, and the ability for a user to input sample answers and sense check the results are as expected.
+
+Language should be a user property to allow users to switch between languages.
 
 Instructions to install and run on a local machine using the Flask inbuilt testing server:
 

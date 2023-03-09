@@ -1,3 +1,4 @@
+import os
 import json
 from enum import Enum
 
@@ -25,6 +26,7 @@ class QuestionnaireHandler():
         self.question_data = None
         self.questionnaire_validity = questionnaire_validity_states['not_checked']
         self.validity_message = None
+        self.language = os.environ.get("LANGUAGE")
 
         if question_data_path:
             self.load_question_data(question_data_path)
@@ -43,6 +45,7 @@ class QuestionnaireHandler():
             self.questionnaire_validity = questionnaire_validity_states['not_valid']
             self.validity_message = questionnaire_validity_messages['json could not be parsed']
             return
+ 
 
 
     def validate_question_data(self):
@@ -72,6 +75,13 @@ class QuestionnaireHandler():
 
         return True
 
+    def caluculate_message(self, age: int, answers: list) -> int:
+
+        points = self.calculate_points(age, answers)
+        return self.get_message_from_points(points)
+
+
+
     def calculate_points(self, age: int, answers: list) -> int:
 
         age_index = self.get_age_index(age, self.question_data['age_range_maximums'])
@@ -90,3 +100,22 @@ class QuestionnaireHandler():
                 return i
 
         return len(age_range_maximums)
+
+    def get_message_from_points(self, points: int) -> str:
+
+        message_maximums = self.question_data['message_maximums']
+        message_index = self.get_message_index(points, message_maximums)
+
+        questionnaire_result_messages = self.question_data['messages']
+        message_key = questionnaire_result_messages['states'][message_index]
+        
+        return questionnaire_result_messages[self.language][message_key]
+
+    def get_message_index(self, points:int, message_maximums: list) -> int:
+
+        for i, max_points in enumerate(message_maximums):
+            if points <= max_points:
+                return i
+
+        return len(message_maximums)
+

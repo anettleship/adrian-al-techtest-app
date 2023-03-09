@@ -1,5 +1,5 @@
 import pytest
-from flask import current_app, session, url_for
+from flask import current_app, url_for, session
 from flask_login import current_user, login_user, LoginManager
 from application.app_factory import create_app
 from application.auth import Auth, User
@@ -128,8 +128,10 @@ def test_t2lifestylechecker_validate_route_should_return_current_user_with_age_a
 
     with app.test_client() as test_client:
         response = test_client.post("/validate_login", data=form_data)
-        assert current_user.age == 70
         assert current_user.id == form_data['nhsnumber']
+        assert session['user_age'] == 70
+    
+    
 
 
 def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_user_not_logged_in():
@@ -185,6 +187,8 @@ def test_t2lifestylechecker_calculate_score_route_should_return_success_from_pos
 
     with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
+            with test_client.session_transaction() as session:
+                session['user_age'] = 16
             test_user = User('123456789')
             login_user(test_user)
             response = test_client.post("/calculate_score")
@@ -202,37 +206,42 @@ def test_t2lifestylechecker_calculate_score_route_should_return_unauthorised_whe
 
 
 known_questionnaire_result_for_age_and_answers = [
-    (16, ["No", "No", "Yes"], 0, QuestionnaireResultStates.great_work),
-    (66, ["No", "No", "Yes"], 0, QuestionnaireResultStates.great_work),
-    (16, ["Yes", "No", "Yes"], 1, QuestionnaireResultStates.great_work),
-    (16, ["Yes", "Yes", "Yes"], 3, QuestionnaireResultStates.great_work),
-    (16, ["Yes", "Yes", "No"], 4, QuestionnaireResultStates.please_call),
-    (21, ["Yes", "Yes", "No"], 4, QuestionnaireResultStates.please_call),
-    (22, ["Yes", "Yes", "No"], 7, QuestionnaireResultStates.please_call),
-    (40, ["Yes", "Yes", "No"], 7, QuestionnaireResultStates.please_call),
-    (41, ["No", "No", "No"], 2, QuestionnaireResultStates.great_work),
-    (65, ["No", "No", "No"], 1, QuestionnaireResultStates.great_work),
-    (65, ["Yes", "Yes", "No"], 7, QuestionnaireResultStates.please_call),
-    (85, ["No", "No", "No"], 1, QuestionnaireResultStates.great_work),
+    (16, ["No", "No", "Yes"], 0, 'great_work'),
+    (66, ["No", "No", "Yes"], 0, 'great_work'),
+    (16, ["Yes", "No", "Yes"], 1, 'great_work'),
+    (16, ["Yes", "Yes", "Yes"], 3, 'great_work'),
+    (16, ["Yes", "Yes", "No"], 4, 'please_call'),
+    (21, ["Yes", "Yes", "No"], 4, 'please_call'),
+    (22, ["Yes", "Yes", "No"], 7, 'please_call'),
+    (40, ["Yes", "Yes", "No"], 7, 'please_call'),
+    (41, ["No", "No", "No"], 2, 'great_work'),
+    (65, ["No", "No", "No"], 1, 'great_work'),
+    (65, ["Yes", "Yes", "No"], 7, 'please_call'),
+    (85, ["No", "No", "No"], 1, 'great_work'),
 ]
 
 @pytest.mark.parametrize("age,answers,score,expected", known_questionnaire_result_for_age_and_answers)
 def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_for_given_test_user_ages_and_answers(age, answers, score, expected):
     app = create_app(config.Testing())
-
+    questionnaire_handler
     form_data = {
-        'nhsnumber': '123456789',
-        'firstname': 'Kent',
-        'lastname': 'Beck',
-        'dateofbirth': '1961-03-31',
+        f'Q1.{answers[0]}': 'question_text',
+        f'Q2.{answers[1]}': 'question_text',
+        f'Q3.{answers[2]}': 'question_text',
+        f'Submit': '',
     }
 
+    language = 'en-gb'
 
     with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
-            test_user = T2User('123456789', age)
+            with test_client.session_transaction() as session:
+                session['user_age'] = age
+            test_user = User('123456789')
             login_user(test_user)
-            response = test_client.post("/calculate_score")
+            response = test_client.post("/calculate_score", data=form_data)
+    
+    expected_message = questionnaire_handler.question_data['messages'][language][expected]
 
-    assert expected.name in response.text
+    assert expected_message in response.text
 

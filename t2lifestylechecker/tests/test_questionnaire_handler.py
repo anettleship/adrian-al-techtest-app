@@ -170,3 +170,38 @@ def test_QuestionnaireHandler_should_load_and_validate_questionnaire_data_automa
     questionnaire_handler = QuestionnaireHandler(question_data_path)
 
     assert questionnaire_handler.questionnaire_validity == questionnaire_validity_states['valid']
+
+
+known_message_for_points = [
+    (0, 'en-gb', 'great_work'),
+    (3, 'en-gb', 'great_work'),
+    (4, 'en-gb', 'please_call'),
+    (88, 'en-gb', 'please_call'),
+]
+
+@pytest.mark.parametrize("points,language,expected", known_message_for_points)
+def test_QuestionnaireHandler_get_message_from_points_should_return_correct_message_for_test_question_data_given_age_range_and_answers(points, language, expected):
+
+
+    questionnaire_handler = QuestionnaireHandler()
+
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler.load_question_data(question_data_path)
+    questionnaire_handler.validate_question_data()
+    message = questionnaire_handler.get_message_from_points(points)
+
+    assert message == questionnaire_handler.question_data["messages"][language][expected]
+
+
+def test_QuestionnaireHandler_should_function_fully_when_initialised_with_a_question_data_path_and_calculate_message_is_called():
+
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
+
+    age = 16
+    answers = ["No", "No", "Yes"]
+    expected = "Thank you for answering our questions, we don't need to see you at this time. Keep up the good work!"
+
+    message = questionnaire_handler.caluculate_message(age, answers)
+
+    assert message == expected 

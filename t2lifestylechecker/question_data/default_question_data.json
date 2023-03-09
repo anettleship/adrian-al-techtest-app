@@ -26,5 +26,17 @@
                 "No": [1,3,2,1]
             }
         }
-    ]
+    ],
+    "message_maximums": [3],
+    "messages": {
+        "states" : ["great_work", "please_call"],
+        "en-gb" : {
+            "great_work": "Thank you for answering our questions, we don't need to see you at this time. Keep up the good work!",
+            "please_call": "We think there are some simple things you could do to improve you quality of life, please phone to book an appointment"
+        },
+        "fr-fr" : { 
+            "great_work": "Thank you for answering our questions, we don't need to see you at this time. Keep up the good work!",
+            "please_call": "We think there are some simple things you could do to improve you quality of life, please phone to book an appointment"
+        }
+    }   
 }

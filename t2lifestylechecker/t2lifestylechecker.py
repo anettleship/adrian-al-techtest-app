@@ -1,8 +1,9 @@
 import sys
 import os
-from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for
+from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for, session
 from flask_login import login_required, login_user, current_user
 from application.config_load import application_config, questionnaire_data
+from application.auth import User
 from . t2lifestylechecker_config import jinja_env, questionnaire_handler, T2User
 from . external_validation_handler import ExternalValidationHandler
 from . valid_results import external_api_valid_results
@@ -48,7 +49,8 @@ def validate():
         language = os.environ.get('LANGUAGE')
         return get_localised_message(result, language)
 
-    user = T2User(nhsnumber, validator.user_age)
+    user = User(nhsnumber)
+    session["user_age"] = validator.user_age
     login_user(user)
     return redirect('questionnaire')
 
@@ -68,4 +70,16 @@ def questionnaire():
 @login_required
 def calculate():
 
-    return "Score displayed Here"
+    age = session['user_age']
+    
+    answers = list()
+
+    for index, answer in enumerate(request.form):
+        if index >= len(questionnaire_handler.question_data['questions']):
+            break
+        question_name = questionnaire_handler.question_data['questions'][index]['name']
+        if answer.startswith(question_name):
+            answer = answer.split(".")[1]
+            answers.append(answer)
+
+    return questionnaire_handler.caluculate_message(age, answers)
