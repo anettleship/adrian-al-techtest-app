@@ -1,24 +1,8 @@
 import os
 import json
 from enum import Enum
-
-
-questionnaire_validity_states = Enum(
-    'questionnaire_validity', [
-        'not_checked',
-        'not_valid',
-        'valid'
-    ]
-)
-
-questionnaire_validity_messages = Enum(
-    'questionnaire_validity_message', [
-        'file not found at supplied path',
-        'json could not be parsed',
-        'all answers must have list of points equal to age range maximums plus one',
-    ]
-)
-
+from .t2lifestylechecker_config import questionnaire_validity_states
+from .t2lifestylechecker_config import questionnaire_validity_messages
 
 class QuestionnaireHandler():
 

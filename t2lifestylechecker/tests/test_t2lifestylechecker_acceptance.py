@@ -1,10 +1,10 @@
 import pytest
-from flask import current_app, url_for, session
-from flask_login import current_user, login_user, LoginManager
+from flask import url_for, session
+from flask_login import current_user, login_user
 from application.app_factory import create_app
-from application.auth import Auth, User
+from application.auth import User
 from application.config_load import application_config
-from t2lifestylechecker.t2lifestylechecker_config import questionnaire_handler
+from t2lifestylechecker.t2lifestylechecker import questionnaire_handler
 import application.config as config
 from bs4 import BeautifulSoup
 

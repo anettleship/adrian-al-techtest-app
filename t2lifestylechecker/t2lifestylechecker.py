@@ -1,19 +1,26 @@
-import sys
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for, session
 from flask_login import login_required, login_user
+from dotenv import load_dotenv
+from jinja2 import Environment, PackageLoader, select_autoescape
 from application.config_load import application_config
 from application.auth import User
-from .t2lifestylechecker_config import jinja_env, questionnaire_handler
+from .t2lifestylechecker_config import external_api_valid_results
 from .external_validation_handler import ExternalValidationHandler
-from .valid_results import external_api_valid_results
 from .external_validation_handler_helper import get_localised_message
-
+from . questionnaire_handler import QuestionnaireHandler
 
 application_name = "t2lifestylechecker"
 
 t2lifestylechecker = Blueprint(application_name, __name__)
 
+jinja_env = Environment(
+    loader=PackageLoader("t2lifestylechecker"), autoescape=select_autoescape()
+)
+
+load_dotenv()
+question_data_path = os.environ.get("QUESTION_DATA_PATH")
+questionnaire_handler = QuestionnaireHandler(question_data_path)
 
 
 @t2lifestylechecker.route("/")

@@ -10,7 +10,6 @@ class Auth:
     def __init__(self):
 
         self.login_manager = LoginManager()
-    
 
     def init_app(self, app):
 

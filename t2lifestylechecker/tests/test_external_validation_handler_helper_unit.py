@@ -1,7 +1,6 @@
 import pytest
-from t2lifestylechecker.valid_results import external_api_valid_results
+from t2lifestylechecker.t2lifestylechecker_config import external_api_valid_results
 from t2lifestylechecker.external_validation_handler_helper import get_localised_message
-from t2lifestylechecker.external_validation_handler_helper import externalvalidationhandler_message_localisations 
 
 validation_messages = [
     ('not_found', 'en-gb', 'Your details could not be found'),

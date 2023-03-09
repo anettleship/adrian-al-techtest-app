@@ -1,11 +1,9 @@
 from t2lifestylechecker.external_validation_handler import ExternalValidationHandler
-from t2lifestylechecker.valid_results import external_api_valid_results
+from t2lifestylechecker.t2lifestylechecker_config import external_api_valid_results
 from t2lifestylechecker.tests.test_helpers import calculate_birth_year_from_constant_age_and_birthday
-from dotenv import load_dotenv
 from datetime import datetime
 import requests
 import pytest
-import json
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
