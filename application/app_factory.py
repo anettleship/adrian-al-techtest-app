@@ -1,7 +1,5 @@
 import os
 from flask import Flask
-from flask_login import LoginManager
-from dotenv import load_dotenv
 from application.auth import Auth
 from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
 

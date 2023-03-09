@@ -2,7 +2,7 @@ import sys
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for, session
 from flask_login import login_required, login_user
-from application.config_load import application_config, questionnaire_data
+from application.config_load import application_config
 from application.auth import User
 from .t2lifestylechecker_config import jinja_env, questionnaire_handler
 from .external_validation_handler import ExternalValidationHandler
@@ -61,7 +61,7 @@ def questionnaire():
     questionnaire_title = application_config.question_form_title
     form_action= url_for(f'{application_name}.calculate')
     return template.render(title=questionnaire_title, \
-        form_action_url=form_action, questionnaire=questionnaire_data)
+        form_action_url=form_action, questionnaire=questionnaire_handler.question_data)
 
 
 @t2lifestylechecker.route("/calculate_score", methods=["POST"])
@@ -75,9 +75,7 @@ def calculate():
     for index, question in enumerate(request.form):
         if index >= len(questionnaire_handler.question_data['questions']):
             break
-        question_name = questionnaire_handler.question_data['questions'][index]['name']
-        if question == question_name:
-            answer = request.form[question] 
-            answers.append(answer)
+        answer = request.form[question] 
+        answers.append(answer)
 
     return questionnaire_handler.caluculate_message(age, answers)
