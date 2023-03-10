@@ -205,6 +205,15 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
             )
 
 
+def test_t2lifestylechecker_calculate_score_route_should_redirect_to_index_when_user_not_logged_in():
+    app = create_app(Config(Stage.testing))
+
+    with app.test_client() as test_client:
+        response = test_client.post("/calculate_score")
+        assert response.location == url_for("t2lifestylechecker.index")
+    assert response.status_code == 401
+
+
 def test_t2lifestylechecker_calculate_score_route_should_return_success_from_post_request_for_logged_in_user_with_age_set_in_session():
     app = create_app(Config(Stage.testing))
 
