@@ -1,13 +1,12 @@
 import os
-from application.config_stages import Stage 
+from application.config_stages import Stage
 from dotenv import load_dotenv
 
+
 class Config:
-
     def __init__(self, stage=None):
-
         load_dotenv()
-        
+
         self.SECRET_KEY = os.environ.get("SECRET_KEY")
 
         if not stage:
@@ -20,7 +19,7 @@ class Config:
             return
 
         if stage == Stage.development:
-            self.DEBUG = True 
+            self.DEBUG = True
             self.TESTING = True
             return
 
