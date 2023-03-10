@@ -35,12 +35,16 @@ questionnaire_handler = QuestionnaireHandler(question_data_path)
 
 
 @t2lifestylechecker.route("/")
-@t2lifestylechecker.route("/login")
 def index():
     template = jinja_env.get_template("login.html")
     form_title = os.environ.get("LOGIN_FORM_TITLE")
     validate_url = url_for(f"{application_name}.validate")
     return template.render(title=form_title, form_action_url=validate_url)
+
+
+@t2lifestylechecker.route("/login")
+def login():
+    return redirect("/")
 
 
 @t2lifestylechecker.route("/js/<path:filename>")
