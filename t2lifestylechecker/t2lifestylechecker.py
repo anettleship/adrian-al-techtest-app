@@ -68,7 +68,14 @@ def validate():
 
     if not result == external_api_login_results["found"]:
         language = os.environ.get("LANGUAGE")
-        return get_localised_message(result, language)
+        
+
+        questionnaire_title = os.environ.get("LOGIN_FORM_TITLE")
+        template = jinja_env.get_template("message.html")
+        return template.render(
+            title=questionnaire_title,
+            message=get_localised_message(result, language)
+        )
 
     obfuscate_nhs_number = obfuscate_string_base64(nhs_number)
     user = User(obfuscate_nhs_number)
@@ -105,4 +112,9 @@ def calculate():
 
     logout_user()
 
-    return questionnaire_handler.caluculate_message(age, answers)
+    questionnaire_title = os.environ.get("QUESTION_FORM_TITLE")
+    template = jinja_env.get_template("message.html")
+    return template.render(
+        title=questionnaire_title,
+        message=questionnaire_handler.caluculate_message(age, answers)
+    )

@@ -9,7 +9,7 @@ from t2lifestylechecker.external_validation_handler_helper import (
 validation_messages = [
     ("not_found", "en-gb", "Your details could not be found"),
     ("details_not_matched", "en-gb", "Your details could not be found"),
-    ("not_over_sixteen", "en-gb", "You are not eligble for this service"),
+    ("not_over_sixteen", "en-gb", "You are not eligible for this service"),
     ("found", "en-gb", "This message is never used"),
 ]
 

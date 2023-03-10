@@ -1,3 +1,4 @@
+import html
 import os
 import pytest
 from flask import url_for, session
@@ -68,9 +69,13 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
         "date_of_birth": "1961-03-31",
     }
 
+    expected_message = "Your details could not be found"
+
     with app.test_client() as test_client:
         response = test_client.post("/validate_login", data=form_data)
-    assert "Your details could not be found" in response.text
+    soup = BeautifulSoup(response.data, "html.parser")
+
+    assert len(soup.find_all(text=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -84,9 +89,13 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
         "date_of_birth": "31-03-1961",
     }
 
+    expected_message = "Your details could not be found"
+
     with app.test_client() as test_client:
         response = test_client.post("/validate_login", data=form_data)
-    assert "Your details could not be found" in response.text
+    soup = BeautifulSoup(response.data, "html.parser")
+
+    assert len(soup.find_all(text=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -100,9 +109,13 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
         "date_of_birth": "2008-11-14",
     }
 
+    expected_message = "You are not eligible for this service"
+
     with app.test_client() as test_client:
         response = test_client.post("/validate_login", data=form_data)
-    assert "You are not eligble for this service" in response.text
+    soup = BeautifulSoup(response.data, "html.parser")
+
+    assert len(soup.find_all(text=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -158,7 +171,7 @@ def test_t2lifestylechecker_questionnaire_route_should_redirect_to_index_when_us
 
     with app.test_client() as test_client:
         response = test_client.get("/questionnaire")
-        assert response.location == url_for('t2lifestylechecker.index')
+        assert response.location == url_for('t2lifestylechecker.login')
     assert response.status_code == 401
 
 
@@ -210,7 +223,7 @@ def test_t2lifestylechecker_calculate_score_route_should_redirect_to_index_when_
 
     with app.test_client() as test_client:
         response = test_client.post("/calculate_score")
-        assert response.location == url_for("t2lifestylechecker.index")
+        assert response.location == url_for("t2lifestylechecker.login")
     assert response.status_code == 401
 
 
@@ -279,8 +292,9 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
             response = test_client.post("/calculate_score", data=form_data)
 
     expected_message = questionnaire_handler.question_data["messages"][language][expected]
+    soup = BeautifulSoup(response.data, "html.parser")
 
-    assert expected_message in response.text
+    assert len(soup.find_all(text=expected_message)) == 1
 
 
 def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_returning_message():
@@ -304,11 +318,11 @@ def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_retu
             assert not current_user.is_authenticated
 
 
-def test_t2lifestylechecker_root_and_login_route_return_the_same_response_data():
+def test_t2lifestylechecker_login_route_redirect_to_root():
     app = create_app(Config(Stage.testing))
 
     with app.test_client() as test_client:
-        root = test_client.get("/")
-        login = test_client.get("/login")
+        response = test_client.get("/login")
 
-        assert root.data == login.data
+        assert response.status_code == 302
+        assert response.location == url_for("t2lifestylechecker.index") 
