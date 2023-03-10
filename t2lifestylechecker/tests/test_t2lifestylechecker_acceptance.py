@@ -1,21 +1,22 @@
+import os
 import pytest
 from flask import url_for, session
 from flask_login import current_user, login_user
+from application.config import Config
 from application.app_factory import create_app
 from application.auth import User
-from application.config_load import application_config
+from application.config_stages import Stage
 from t2lifestylechecker.t2lifestylechecker import questionnaire_handler
 from t2lifestylechecker.external_validation_handler_helper import obfuscate_string_base64
-import application.config as config
 from bs4 import BeautifulSoup
 
 
 
 def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_elements():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
-    form_title = application_config.login_form_title
-    
+    form_title =  os.environ.get("LOGIN_FORM_TITLE")
+
     with app.test_client() as test_client:
         response = test_client.get("/")
 
@@ -30,7 +31,7 @@ def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_
 
 
 def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint_static_js_folder():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     with app.test_client() as test_client:
         response = test_client.get("/js/testfile.js")
@@ -39,7 +40,7 @@ def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_success_from_post_request():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '123456789',
@@ -54,7 +55,7 @@ def test_t2lifestylechecker_validate_route_should_return_success_from_post_reque
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_invalid_user():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '123456789',
@@ -70,7 +71,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_not_matched():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '111222333',
@@ -86,7 +87,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_under_sixteens():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '555666777',
@@ -102,7 +103,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '444555666',
@@ -118,7 +119,7 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_set_current_user_id_with_obfuscated_nhsnumber():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '444555666',
@@ -134,7 +135,7 @@ def test_t2lifestylechecker_validate_route_should_set_current_user_id_with_obfus
     
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_t2lifestylechecker_validate_route_should_set_session_with_user_age():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     form_data = {
         'nhsnumber': '444555666',
@@ -150,10 +151,8 @@ def test_t2lifestylechecker_validate_route_should_set_session_with_user_age():
 
 
 def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_user_not_logged_in():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
-    question_form_title = application_config.question_form_title
-    
     with app.test_client() as test_client:
         response = test_client.get("/questionnaire")
 
@@ -161,10 +160,8 @@ def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_
 
 
 def test_t2lifestylechecker_questionnaire_route_should_return_sucesss_for_logged_in_user():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
-    question_form_title = application_config.question_form_title
-    
     with app.test_request_context("/questionnaire", method="GET"):
         with app.test_client() as test_client:
             test_user = User('123456789')
@@ -175,9 +172,9 @@ def test_t2lifestylechecker_questionnaire_route_should_return_sucesss_for_logged
 
 
 def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_answer_html_elements_for_logged_in_user():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
-    question_form_title = application_config.question_form_title
+    question_form_title = os.environ.get("QUESTION_FORM_TITLE")  
     
     with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
@@ -198,7 +195,7 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
             assert soup.find('form', {'action': url_for('t2lifestylechecker.calculate'), 'method': 'post'})
 
 def test_t2lifestylechecker_calculate_score_route_should_return_success_from_post_request_for_logged_in_user_with_age_set_in_session():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
@@ -212,7 +209,7 @@ def test_t2lifestylechecker_calculate_score_route_should_return_success_from_pos
 
 
 def test_t2lifestylechecker_calculate_score_route_should_return_unauthorised_when_user_not_logged_in():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
 
     with app.test_client() as test_client:
         response = test_client.post("/calculate_score")
@@ -237,7 +234,7 @@ known_questionnaire_result_for_age_and_answers = [
 
 @pytest.mark.parametrize("age,answers,score,expected", known_questionnaire_result_for_age_and_answers)
 def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_for_given_test_user_ages_and_answers_with_logged_in_user_and_age_set_in_seesion(age, answers, score, expected):
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
     questionnaire_handler
     form_data = {
         'Q1': f'{answers[0]}',
@@ -262,7 +259,7 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
 
 
 def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_returning_message():
-    app = create_app(config.Testing())
+    app = create_app(Config(Stage.testing))
     questionnaire_handler
     form_data = {
         'Q1': 'Yes',

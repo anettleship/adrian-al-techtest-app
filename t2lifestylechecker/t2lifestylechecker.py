@@ -1,9 +1,8 @@
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for, session
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user
 from dotenv import load_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
-from application.config_load import application_config
 from application.auth import User
 from .t2lifestylechecker_config import external_api_login_results
 from .external_validation_handler import ExternalValidationHandler
@@ -26,7 +25,7 @@ questionnaire_handler = QuestionnaireHandler(question_data_path)
 @t2lifestylechecker.route("/")
 def index():
     template = jinja_env.get_template("login.html")
-    form_title = application_config.login_form_title
+    form_title = os.environ.get("LOGIN_FORM_TITLE") 
     validate_url = url_for(f'{application_name}.validate')
     return template.render(title=form_title, form_action_url=validate_url)
 
@@ -66,7 +65,7 @@ def validate():
 def questionnaire():
 
     template = jinja_env.get_template("questionnaire.html")
-    questionnaire_title = application_config.question_form_title
+    questionnaire_title = os.environ.get("QUESTION_FORM_TITLE")
     form_action= url_for(f'{application_name}.calculate')
     return template.render(title=questionnaire_title, \
         form_action_url=form_action, questionnaire=questionnaire_handler.question_data)

@@ -1,7 +1,5 @@
 from enum import Enum
 
-
-
 external_api_login_results = Enum(
     'login_results', [
         'not_found',

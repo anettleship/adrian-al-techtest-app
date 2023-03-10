@@ -4,8 +4,6 @@ from application.auth import Auth
 from t2lifestylechecker.t2lifestylechecker import t2lifestylechecker
 
 
-
-
 def create_app(application_config):
     """
     Application Factory function to instantiate an application from a given config class defined in config.py

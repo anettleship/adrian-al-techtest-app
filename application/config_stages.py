@@ -1,7 +1,7 @@
-from . config import Production, Development, Testing
+from enum import Enum
 
-stage_list = {
-    "production" : Production,
-    "development" : Development,
-    "testing" : Testing
-}
+class Stage(Enum):
+    production = 1
+    development = 2
+    testing = 3
+
