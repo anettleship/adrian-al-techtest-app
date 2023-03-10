@@ -153,12 +153,12 @@ def test_t2lifestylechecker_validate_route_should_set_session_with_user_age():
         assert session["user_age"] == 70
 
 
-def test_t2lifestylechecker_questionnaire_route_should_return_unauthorized_when_user_not_logged_in():
+def test_t2lifestylechecker_questionnaire_route_should_redirect_to_index_when_user_not_logged_in():
     app = create_app(Config(Stage.testing))
 
     with app.test_client() as test_client:
         response = test_client.get("/questionnaire")
-
+        assert response.location == url_for('t2lifestylechecker.index')
     assert response.status_code == 401
 
 
@@ -293,3 +293,13 @@ def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_retu
             test_client.post("/calculate_score", data=form_data)
 
             assert not current_user.is_authenticated
+
+
+def test_t2lifestylechecker_root_and_login_route_return_the_same_response_data():
+    app = create_app(Config(Stage.testing))
+
+    with app.test_client() as test_client:
+        root = test_client.get("/")
+        login = test_client.get("/login")
+
+        assert root.data == login.data

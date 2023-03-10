@@ -28,12 +28,14 @@ jinja_env = Environment(
     loader=PackageLoader("t2lifestylechecker"), autoescape=select_autoescape()
 )
 
+
 load_dotenv()
 question_data_path = os.environ.get("QUESTION_DATA_PATH")
 questionnaire_handler = QuestionnaireHandler(question_data_path)
 
 
 @t2lifestylechecker.route("/")
+@t2lifestylechecker.route("/login")
 def index():
     template = jinja_env.get_template("login.html")
     form_title = os.environ.get("LOGIN_FORM_TITLE")
