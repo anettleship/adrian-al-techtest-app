@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, current_app, send_from_directory, request, redirect, url_for, session
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
 from application.config_load import application_config
@@ -85,5 +85,7 @@ def calculate():
             break
         answer = request.form[question] 
         answers.append(answer)
+
+    logout_user()
 
     return questionnaire_handler.caluculate_message(age, answers)

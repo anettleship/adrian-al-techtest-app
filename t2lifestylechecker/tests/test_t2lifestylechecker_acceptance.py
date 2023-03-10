@@ -260,3 +260,24 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
 
     assert expected_message in response.text
 
+
+def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_returning_message():
+    app = create_app(config.Testing())
+    questionnaire_handler
+    form_data = {
+        'Q1': 'Yes',
+        'Q2': 'Yes',
+        'Q3': 'Yes',
+        'Submit': '',
+    }
+
+    with app.test_request_context("/validate_login", method="POST"):
+        with app.test_client() as test_client:
+            with test_client.session_transaction() as session:
+                session['user_age'] = 70 
+            test_user = User('123456789')
+            login_user(test_user)
+            test_client.post("/calculate_score", data=form_data)
+    
+            assert not current_user.is_authenticated
+
