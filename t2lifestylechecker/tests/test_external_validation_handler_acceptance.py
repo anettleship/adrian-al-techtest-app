@@ -10,12 +10,12 @@ import pytest
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 def test_ExternalValidationHandler_call_validation_api_should_return_requests_response_object():
-    nhsnumber = "111222333"
-    firstname = None
-    lastname = None
-    dateofbirth = None
+    nhs_number = "111222333"
+    first_name = None
+    last_name = None
+    date_of_birth = None
 
-    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth)
+    validator = ExternalValidationHandler(nhs_number, first_name, last_name, date_of_birth)
 
     response = validator.call_validation_api()
     assert type(response) == requests.Response
@@ -51,10 +51,10 @@ known_api_transactions = [
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize(
-    "nhsnumber,firstname,lastname,month_day,age,expected", known_api_transactions
+    "nhs_number,first_name,last_name,month_day,age,expected", known_api_transactions
 )
 def test_ExternalValidationHandler_process_response_should_return_expected_response_for_known_test_cases(
-    nhsnumber, firstname, lastname, month_day, age, expected
+    nhs_number, first_name, last_name, month_day, age, expected
 ):
     # NB: the external api's exact  date of birth varies per query, it sometimes returns a
     # date of birth which results in an age > 16 for Megan May.
@@ -62,13 +62,13 @@ def test_ExternalValidationHandler_process_response_should_return_expected_respo
     # The above input dates of birth should be realigned with the recorded api response
     # if api responses are ever re-recorded.
 
-    user_dateofbirth_constant_age = calculate_birth_year_from_constant_age_and_birthday(
+    user_date_of_birth_constant_age = calculate_birth_year_from_constant_age_and_birthday(
         month_day, age
     )
 
     today_object = datetime.now()
     validator = ExternalValidationHandler(
-        nhsnumber, firstname, lastname, user_dateofbirth_constant_age, today_object
+        nhs_number, first_name, last_name, user_date_of_birth_constant_age, today_object
     )
 
     response = validator.call_validation_api()
@@ -84,18 +84,18 @@ known_api_transactions_found = [
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize(
-    "nhsnumber,firstname,lastname,month_day,age,expected", known_api_transactions_found
+    "nhs_number,first_name,last_name,month_day,age,expected", known_api_transactions_found
 )
 def test_ExternalValidationHandler_process_response_should_set_age_for_user_when_details_match(
-    nhsnumber, firstname, lastname, month_day, age, expected
+    nhs_number, first_name, last_name, month_day, age, expected
 ):
-    user_dateofbirth_constant_age = calculate_birth_year_from_constant_age_and_birthday(
+    user_date_of_birth_constant_age = calculate_birth_year_from_constant_age_and_birthday(
         month_day, age
     )
 
     today_object = datetime.now()
     validator = ExternalValidationHandler(
-        nhsnumber, firstname, lastname, user_dateofbirth_constant_age, today_object
+        nhs_number, first_name, last_name, user_date_of_birth_constant_age, today_object
     )
 
     response = validator.call_validation_api()
@@ -111,14 +111,14 @@ known_api_transactions_1 = [
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize(
-    "nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions_1
+    "nhs_number,first_name,last_name,date_of_birth,expected", known_api_transactions_1
 )
 def test_ExternalValidationHandler_validate_details_executes_function_sequence_correctly(
-    nhsnumber, firstname, lastname, dateofbirth, expected
+    nhs_number, first_name, last_name, date_of_birth, expected
 ):
     today_object = datetime.strptime("2021-12-31", "%Y-%m-%d")
     validator = ExternalValidationHandler(
-        nhsnumber, firstname, lastname, dateofbirth, today_object
+        nhs_number, first_name, last_name, date_of_birth, today_object
     )
 
     assert validator.validate_details() == external_api_login_results[expected]
@@ -137,20 +137,20 @@ birtday_inputs = [
 ]
 
 
-@pytest.mark.parametrize("dateofbirth,today,expected", birtday_inputs)
+@pytest.mark.parametrize("date_of_birth,today,expected", birtday_inputs)
 def test_ExternalValidationHandler_get_age_today_should_return_correct_age(
-    dateofbirth, today, expected
+    date_of_birth, today, expected
 ):
-    nhsnumber = None
-    firstname = None
-    lastname = None
+    nhs_number = None
+    first_name = None
+    last_name = None
 
     today_object = datetime.strptime(today, "%Y-%m-%d")
     validator = ExternalValidationHandler(
-        nhsnumber, firstname, lastname, dateofbirth, today_object
+        nhs_number, first_name, last_name, date_of_birth, today_object
     )
 
-    assert validator.get_age_today(dateofbirth, "%Y-%m-%d") == expected
+    assert validator.get_age_today(date_of_birth, "%Y-%m-%d") == expected
 
 
 name_inputs = [
@@ -162,14 +162,14 @@ name_inputs = [
 ]
 
 
-@pytest.mark.parametrize("firstname,lastname,expected", name_inputs)
+@pytest.mark.parametrize("first_name,last_name,expected", name_inputs)
 def test_ExternalValidationHandler_make_fullname_string_should_not_be_case_sensitive(
-    firstname, lastname, expected
+    first_name, last_name, expected
 ):
-    nhsnumber = None
-    dateofbirth = None
+    nhs_number = None
+    date_of_birth = None
 
-    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth)
+    validator = ExternalValidationHandler(nhs_number, first_name, last_name, date_of_birth)
 
     assert validator.make_fullname_string() == expected
 
@@ -184,12 +184,12 @@ known_api_transactions_matches = [
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
 @pytest.mark.parametrize(
-    "nhsnumber,firstname,lastname,dateofbirth,expected", known_api_transactions_matches
+    "nhs_number,first_name,last_name,date_of_birth,expected", known_api_transactions_matches
 )
 def test_ExternalValidationHandler_user_data_matches_should_return_correctly_for_known_cases(
-    nhsnumber, firstname, lastname, dateofbirth, expected
+    nhs_number, first_name, last_name, date_of_birth, expected
 ):
-    validator = ExternalValidationHandler(nhsnumber, firstname, lastname, dateofbirth)
+    validator = ExternalValidationHandler(nhs_number, first_name, last_name, date_of_birth)
 
     response = validator.call_validation_api()
 

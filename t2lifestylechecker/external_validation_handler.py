@@ -9,16 +9,16 @@ from .t2lifestylechecker_config import external_api_login_results
 class ExternalValidationHandler:
     def __init__(
         self,
-        nhsnumber: str,
-        firstname: str,
-        lastname: str,
-        dateofbirth: str,
+        nhs_number: str,
+        first_name: str,
+        last_name: str,
+        date_of_birth: str,
         today=datetime.now(),
     ):
-        self.nhsnumber = nhsnumber
-        self.firstname = firstname
-        self.lastname = lastname
-        self.dateofbirth = dateofbirth
+        self.nhs_number = nhs_number
+        self.first_name = first_name
+        self.last_name = last_name
+        self.date_of_birth = date_of_birth
         self.today = today
         self.user_age = None
 
@@ -36,7 +36,7 @@ class ExternalValidationHandler:
 
         data = {subscription_key_name: subscription_key}
 
-        return requests.get(api_url + self.nhsnumber, headers=data)
+        return requests.get(api_url + self.nhs_number, headers=data)
 
     def process_response(self, response: requests.Response) -> Enum:
         if response.status_code != 200:
@@ -48,15 +48,15 @@ class ExternalValidationHandler:
 
         # check if user date of birth is not over sixteen
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
-        self.user_age = self.get_age_today(self.dateofbirth, form_date_format_str)
+        self.user_age = self.get_age_today(self.date_of_birth, form_date_format_str)
 
         if not self.user_age >= 16:
             return external_api_login_results["not_over_sixteen"]
 
         return external_api_login_results["found"]
 
-    def get_age_today(self, dateofbirth: str, date_format_str: str) -> int:
-        born = datetime.strptime(dateofbirth, date_format_str)
+    def get_age_today(self, date_of_birth: str, date_format_str: str) -> int:
+        born = datetime.strptime(date_of_birth, date_format_str)
         today = self.today
         return (
             today.year - born.year - ((today.month, today.day) < (born.month, born.day))
@@ -69,16 +69,16 @@ class ExternalValidationHandler:
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
         api_date_format_str = os.environ.get("API_DATE_FORMAT_STRING")
 
-        form_dateofbirth_dt = datetime.strptime(self.dateofbirth, form_date_format_str)
-        api_dateofbirth_dt = datetime.strptime(
+        form_date_of_birth_dt = datetime.strptime(self.date_of_birth, form_date_format_str)
+        api_date_of_birth_dt = datetime.strptime(
             response.json()["born"], api_date_format_str
         )
-        if form_dateofbirth_dt != api_dateofbirth_dt:
+        if form_date_of_birth_dt != api_date_of_birth_dt:
             return False
 
         return True
 
     def make_fullname_string(self):
-        firstname = self.firstname.lower()
-        lastname = self.lastname.lower()
-        return f"{lastname}, {firstname}"
+        first_name = self.first_name.lower()
+        last_name = self.last_name.lower()
+        return f"{last_name}, {first_name}"

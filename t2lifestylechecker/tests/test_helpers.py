@@ -10,9 +10,9 @@ def calculate_birth_year_from_constant_age_and_birthday(
     user_birthday_this_year = str(today_object.year) + birthday_month_day
     user_birthday_this_year_obj = datetime.strptime(user_birthday_this_year, "%Y-%m-%d")
 
-    user_dateofbirth_from_age = user_birthday_this_year_obj - relativedelta(years=age)
+    user_date_of_birth_from_age = user_birthday_this_year_obj - relativedelta(years=age)
 
     if today_object < user_birthday_this_year_obj:
-        user_dateofbirth_from_age -= relativedelta(years=1)
+        user_date_of_birth_from_age -= relativedelta(years=1)
 
-    return datetime.strftime(user_dateofbirth_from_age, "%Y-%m-%d")
+    return datetime.strftime(user_date_of_birth_from_age, "%Y-%m-%d")

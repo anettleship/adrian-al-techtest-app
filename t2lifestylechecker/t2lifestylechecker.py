@@ -48,14 +48,14 @@ def static_js(filename):
 
 @t2lifestylechecker.route("/validate_login", methods=["POST"])
 def validate():
-    nhsnumber = request.form["nhsnumber"]
-    firstname = request.form["firstname"]
-    lastname = request.form["lastname"]
-    dateofbirth = request.form["dateofbirth"]
+    nhs_number = request.form["nhs_number"]
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    date_of_birth = request.form["date_of_birth"]
 
     with current_app.app_context():
         validator = ExternalValidationHandler(
-            nhsnumber, firstname, lastname, dateofbirth
+            nhs_number, first_name, last_name, date_of_birth
         )
 
     result = validator.validate_details()
@@ -64,8 +64,8 @@ def validate():
         language = os.environ.get("LANGUAGE")
         return get_localised_message(result, language)
 
-    obfuscate_nhsnumber = obfuscate_string_base64(nhsnumber)
-    user = User(obfuscate_nhsnumber)
+    obfuscate_nhs_number = obfuscate_string_base64(nhs_number)
+    user = User(obfuscate_nhs_number)
     session["user_age"] = validator.user_age
     login_user(user)
     return redirect("questionnaire")

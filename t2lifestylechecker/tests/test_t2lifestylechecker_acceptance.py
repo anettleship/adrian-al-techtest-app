@@ -24,9 +24,9 @@ def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_
         soup = BeautifulSoup(response.data, "html.parser")
         assert response.status_code == 200
         assert soup.title.string == form_title
-        assert soup.find(name="input", attrs={"name": "firstname"})
-        assert soup.find(name="input", attrs={"name": "lastname"})
-        assert soup.find(name="input", attrs={"name": "dateofbirth"})
+        assert soup.find(name="input", attrs={"name": "first_name"})
+        assert soup.find(name="input", attrs={"name": "last_name"})
+        assert soup.find(name="input", attrs={"name": "date_of_birth"})
         assert soup.find(name="button", attrs={"name": "submit"})
         assert soup.find(
             "form", {"action": url_for("t2lifestylechecker.validate"), "method": "post"}
@@ -46,10 +46,10 @@ def test_t2lifestylechecker_validate_route_should_return_success_from_post_reque
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "123456789",
-        "firstname": "Kent",
-        "lastname": "Beck",
-        "dateofbirth": "1961-03-31",
+        "nhs_number": "123456789",
+        "first_name": "Kent",
+        "last_name": "Beck",
+        "date_of_birth": "1961-03-31",
     }
 
     with app.test_client() as test_client:
@@ -62,10 +62,10 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "123456789",
-        "firstname": "Kent",
-        "lastname": "Beck",
-        "dateofbirth": "1961-03-31",
+        "nhs_number": "123456789",
+        "first_name": "Kent",
+        "last_name": "Beck",
+        "date_of_birth": "1961-03-31",
     }
 
     with app.test_client() as test_client:
@@ -78,10 +78,10 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "111222333",
-        "firstname": "Kent",
-        "lastname": "Beck",
-        "dateofbirth": "31-03-1961",
+        "nhs_number": "111222333",
+        "first_name": "Kent",
+        "last_name": "Beck",
+        "date_of_birth": "31-03-1961",
     }
 
     with app.test_client() as test_client:
@@ -94,10 +94,10 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "555666777",
-        "firstname": "Megan",
-        "lastname": "May",
-        "dateofbirth": "2008-11-14",
+        "nhs_number": "555666777",
+        "first_name": "Megan",
+        "last_name": "May",
+        "date_of_birth": "2008-11-14",
     }
 
     with app.test_client() as test_client:
@@ -110,10 +110,10 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "444555666",
-        "firstname": "Charles",
-        "lastname": "Bond",
-        "dateofbirth": "1952-07-18",
+        "nhs_number": "444555666",
+        "first_name": "Charles",
+        "last_name": "Bond",
+        "date_of_birth": "1952-07-18",
     }
 
     with app.test_client() as test_client:
@@ -122,19 +122,19 @@ def test_t2lifestylechecker_validate_route_should_log_user_in_when_details_match
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
-def test_t2lifestylechecker_validate_route_should_set_current_user_id_with_obfuscated_nhsnumber():
+def test_t2lifestylechecker_validate_route_should_set_current_user_id_with_obfuscated_nhs_number():
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "444555666",
-        "firstname": "Charles",
-        "lastname": "Bond",
-        "dateofbirth": "1952-07-18",
+        "nhs_number": "444555666",
+        "first_name": "Charles",
+        "last_name": "Bond",
+        "date_of_birth": "1952-07-18",
     }
 
     with app.test_client() as test_client:
         test_client.post("/validate_login", data=form_data)
-        assert current_user.id == obfuscate_string_base64(form_data["nhsnumber"])
+        assert current_user.id == obfuscate_string_base64(form_data["nhs_number"])
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -142,10 +142,10 @@ def test_t2lifestylechecker_validate_route_should_set_session_with_user_age():
     app = create_app(Config(Stage.testing))
 
     form_data = {
-        "nhsnumber": "444555666",
-        "firstname": "Charles",
-        "lastname": "Bond",
-        "dateofbirth": "1952-07-18",
+        "nhs_number": "444555666",
+        "first_name": "Charles",
+        "last_name": "Bond",
+        "date_of_birth": "1952-07-18",
     }
 
     with app.test_client() as test_client:
