@@ -16,10 +16,13 @@ from bs4 import BeautifulSoup
 
 def test_t2lifestylechecker_should_exit_with_zero_length_secret_key():
     os.environ["SECRET_KEY"] = ""
-    with pytest.raises(SystemExit) as error:
-        app = create_app(Config(Stage.testing))
-    assert error.type == SystemExit
-
+    try:
+        with pytest.raises(SystemExit) as error:
+            app = create_app(Config(Stage.testing))
+        assert error.type == SystemExit
+    finally:
+        os.unsetenv("SECRET_KEY")
+        del(os.environ["SECRET_KEY"])
 
 def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_elements():
     app = create_app(Config(Stage.testing))
