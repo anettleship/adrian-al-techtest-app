@@ -202,14 +202,16 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
 
             assert soup.title.string == question_form_title
 
+            assert len(soup.find_all("input",{"type": "radio", "value": "Yes"})) == 3
+            assert len(soup.find_all("input",{"type": "radio", "value": "No"})) == 3
+
             for question in questionnaire_handler.question_data["questions"]:
                 assert soup.find(id=question["name"])
-                for answer in question["answers"]:
-                    assert (len(soup.find_all(
-                                "input",
-                                {"type": "radio", "name": f"{question['name']}"},
-                            )) == 2
-                    )
+                assert (len(soup.find_all(
+                            "input",
+                            {"type": "radio", "name": f"{question['name']}"},
+                        )) == 2
+                )
 
             assert soup.find(name="button", attrs={"name": "submit"})
             assert soup.find(
