@@ -14,6 +14,13 @@ from t2lifestylechecker.external_validation_handler_helper import (
 from bs4 import BeautifulSoup
 
 
+def test_t2lifestylechecker_should_exit_with_zero_length_secret_key():
+    os.environ["SECRET_KEY"] = ""
+    with pytest.raises(SystemExit) as error:
+        app = create_app(Config(Stage.testing))
+    assert error.type == SystemExit
+
+
 def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_elements():
     app = create_app(Config(Stage.testing))
 
@@ -75,7 +82,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_message_for_i
         response = test_client.post("/validate_login", data=form_data)
     soup = BeautifulSoup(response.data, "html.parser")
 
-    assert len(soup.find_all(text=expected_message)) == 1
+    assert len(soup.find_all(string=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -95,7 +102,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_found_for_details_n
         response = test_client.post("/validate_login", data=form_data)
     soup = BeautifulSoup(response.data, "html.parser")
 
-    assert len(soup.find_all(text=expected_message)) == 1
+    assert len(soup.find_all(string=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -115,7 +122,7 @@ def test_t2lifestylechecker_validate_route_should_return_not_over_sixteen_for_un
         response = test_client.post("/validate_login", data=form_data)
     soup = BeautifulSoup(response.data, "html.parser")
 
-    assert len(soup.find_all(text=expected_message)) == 1
+    assert len(soup.find_all(string=expected_message)) == 1
 
 
 @pytest.mark.vcr(filter_headers=(["Ocp-Apim-Subscription-Key"]))
@@ -296,7 +303,7 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
     expected_message = questionnaire_handler.question_data["messages"][language][expected]
     soup = BeautifulSoup(response.data, "html.parser")
 
-    assert len(soup.find_all(text=expected_message)) == 1
+    assert len(soup.find_all(string=expected_message)) == 1
 
 
 def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_returning_message():

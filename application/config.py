@@ -1,4 +1,5 @@
 import os
+import sys
 from application.config_stages import Stage
 from dotenv import load_dotenv
 
@@ -8,6 +9,10 @@ class Config:
         load_dotenv()
 
         self.SECRET_KEY = os.environ.get("SECRET_KEY")
+
+        if len(self.SECRET_KEY) == 0:
+            print("No secret key set, exiting... please create file .env in project root and set 'SECRET_KEY' value, according to readme")
+            sys.exit()
 
         if not stage:
             stage = Stage[os.environ.get("STAGE")]
