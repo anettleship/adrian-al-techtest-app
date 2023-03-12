@@ -4,13 +4,16 @@ Web application built for a job application tech test:
 ## Instructions to install and run on a local machine using the Flask inbuilt testing server:
 
 Clone repository using git to local machine and navigate into this folder from the command line.
+
 `git clone https://github.com/anettleship/adrian-al-techtest-app.git`
 
-Install Python 3.11.2:
+Install Python 3.11:
 https://www.python.org/downloads/
 Choose to add Python to Path
 
 Verify this is installed python is installed by running `python` from a terminal session, it may be necessary to restart your terminal session or reboot your machine if you have never installed python before. 
+
+Using your terminal, cd into the project folder adrian-al-testtest-app.
 
 Install pipenv for python 3:
 `pip3 install pipenv`
@@ -25,26 +28,43 @@ We are using python 3.11.2, and this is specified in the pipenv Pipfile included
 Elevate our terminal so that our commands are executed in the contect of the virtual environment, with our project specific python version and dependencies:
 `pipenv shell`
 
-Make a note of the name of the virtual environment that's created. If you are using an IDE, you will need to configure your IDE to use the correct virtual environment. IDE specific instructions are outside this document's scope, for testing purposes we can use the terminal.
+Make a note of the location of the virtual environment that's created. If you are using an IDE, you will need to configure your IDE to use the correct virtual environment. IDE specific instructions are outside this document's scope, for testing purposes we can use the terminal.
 
 All python commands below must be run within a shell which has been elevated by running 'pipenv shell' first. Run `python` (on some systems this is `python3`).
 
 We must now generate an app secret key (used to encrypt application data stored in the user's session cookie). Run the following commands sequentially within an interactive session by running and then copy the result to use in the next step:
 
 `python`
+
 `>>> import secrets`
+
 `>>> secrets.token_urlsafe(16)`
 
-Setting environment variables: Within the project structure is a folder named env_templates, it is necessary to copy the template.env file into the root of the project (place next to app.py) and rename it to .env. Then manually insert the correct values for our application secret key: SECRET_KEY="" and the subscription key (included in requests to the external API that returns patient data from an NHS number, provided separately on request by the api owners): SUBSCRIPTION_KEY="" in between the quotes.
+`exit()`
+
+Setting environment variables: Within the project structure is a folder named env_templates, it is necessary to copy the template.env file into the root of the project (place next to app.py) and rename it to .env. 
+
+`cp env_templates/template.env .env`
+
+Then manually insert the correct values for our application secret key: SECRET_KEY="" and the subscription key (included in requests to the external API that returns patient data from an NHS number, provided separately on request by the api owners): SUBSCRIPTION_KEY="" in between the quotes.
+
+At this point, if you are deploying to production, change the variable STAGE from "development" to "production". This will cause our flask app to be loaded with debugging disabled.
 
 We can verify the .env is being loaded successfully by running the following to view our secret key:
 
 `python`
+
 `>>> from dotenv import load_dotenv`
+
 `>>> load_dotenv()`
+
+`>>> import os`
+
 `>>> os.environ.get("SECRET_KEY")`
 
-Note, that my prefered choice for secrets such as secret keys and api keys would be a service like AWS Secrets Manager. For simplicity in this project, we place these secrets in our .env file manually when setting up the project. 
+`exit()`
+
+Note, that my prefered choice for secrets such as secret keys and api keys would be a service like AWS Secrets Manager, as it solves the problem of how to deploy these secrets safely to other environments. For simplicity in this project, we place these secrets in our .env file manually when setting up the project. 
 
 Production deployment is outside the scope of this document, but note that it will be necessary to ensure these environment values are set on any machine which runs our service.
 
