@@ -29,11 +29,6 @@ jinja_env = Environment(
 )
 
 
-load_dotenv()
-question_data_path = os.environ.get("QUESTION_DATA_PATH")
-questionnaire_handler = QuestionnaireHandler(question_data_path)
-
-
 @t2lifestylechecker.route("/")
 def index():
     template = jinja_env.get_template("login.html")
@@ -87,6 +82,9 @@ def validate():
 @t2lifestylechecker.route("/questionnaire")
 @login_required
 def questionnaire():
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
+
     template = jinja_env.get_template("questionnaire.html")
     questionnaire_title = os.environ.get("QUESTION_FORM_TITLE")
     form_action = url_for(f"{application_name}.calculate")
@@ -101,7 +99,8 @@ def questionnaire():
 @login_required
 def calculate():
     age = session["user_age"]
-
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
     answers = list()
 
     for index, question in enumerate(request.form):

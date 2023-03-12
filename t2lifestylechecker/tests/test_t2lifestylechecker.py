@@ -7,7 +7,7 @@ from application.config import Config
 from application.app_factory import create_app
 from application.auth import User
 from application.config_stages import Stage
-from t2lifestylechecker.t2lifestylechecker import questionnaire_handler
+from t2lifestylechecker.questionnaire_handler import QuestionnaireHandler 
 from t2lifestylechecker.external_validation_handler_helper import (
     obfuscate_string_base64,
 )
@@ -201,6 +201,8 @@ def test_t2lifestylechecker_questionnaire_route_should_return_all_question_and_a
     app = create_app(Config(Stage.testing))
 
     question_form_title = os.environ.get("QUESTION_FORM_TITLE")
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
 
     with app.test_request_context("/validate_login", method="POST"):
         with app.test_client() as test_client:
@@ -285,7 +287,8 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
     age, answers, score, expected
 ):
     app = create_app(Config(Stage.testing))
-    questionnaire_handler
+    question_data_path = os.environ.get("QUESTION_DATA_PATH")
+    questionnaire_handler = QuestionnaireHandler(question_data_path)
     form_data = {
         "Q1": f"{answers[0]}",
         "Q2": f"{answers[1]}",
@@ -311,7 +314,6 @@ def test_t2lifestylechecker_calculate_score_route_should_return_correct_message_
 
 def test_t2lifestylechecker_calculate_score_route_should_log_user_out_after_returning_message():
     app = create_app(Config(Stage.testing))
-    questionnaire_handler
     form_data = {
         "Q1": "Yes",
         "Q2": "Yes",
