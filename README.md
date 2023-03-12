@@ -113,7 +113,7 @@ This will run tests and produce a report displaying current test coverage. The f
 
 For cases in the application where a response or validation can include one of a number of possible values, I have used enums to store these possibilities, and to communicate these values within tests. As opposed to passing a string or dictionary directly, which can take any value, the use of enums limits the possible states of these values to the discrete items set. These are stored in t2lifestylechecker_config.py.
 
-### Application Flow
+## Application Flow
 
 The t2lilfestylechecker blueprint is set up to start from the root of the application. The user is presented with a login form from the "/" route. 
 
@@ -130,7 +130,7 @@ The "questionnaire" route calls one final route, posting the user's answers to t
 
 See file_structure.txt for an annotated list of folder heirarchies and the purpose of individual files.
 
-### Part 3 Requirements - Changing Questionnaire, Age Thresholds and Points without redeployment
+## Part 3 Requirements - Changing Questionnaire, Age Thresholds and Points without redeployment
 
 I have implemented the questionnaire data in a separate json file with the Part 3 requirements in mind. If it were required to edit the questionnaire, these adjustments could be made to the json data, which includes a list of the points allocated for a given answer for each age range, and list of age range thresholds which set the maximum age for which the corresponding points score at the same index for any given answer applies. Taking a simple example:
 
