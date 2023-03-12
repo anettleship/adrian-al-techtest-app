@@ -21,9 +21,8 @@ def test_ExternalValidationHandler_call_validation_api_should_return_requests_re
 
 
 def calculate_birth_year_from_constant_age_and_birthday(
-    birthday_month_day: str, age: int
+    birthday_month_day: str, age: int, today_object=datetime.now()
 ) -> str:
-    today_object = datetime.now()
 
     user_birthday_this_year = str(today_object.year) + birthday_month_day
     user_birthday_this_year_obj = datetime.strptime(user_birthday_this_year, "%Y-%m-%d")
@@ -45,11 +44,12 @@ age_calculations = [
 
 
 @pytest.mark.parametrize("birthday_month_day,age,expected", age_calculations)
-def test_calculate_birth_year_from_constant_age_and_birthday(
+def test_calculate_birth_year_from_constant_age_and_birthday_on_given_date(
     birthday_month_day, age, expected
 ):
+    today_object = datetime.strptime("2023-03-12", "%Y-%m-%d")
     assert (
-        calculate_birth_year_from_constant_age_and_birthday(birthday_month_day, age)
+        calculate_birth_year_from_constant_age_and_birthday(birthday_month_day, age, today_object)
         == expected
     )
 
