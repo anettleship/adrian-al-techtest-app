@@ -125,6 +125,9 @@ The "questionnaire" route returns a second form, which asks the user questions a
 
 The "questionnaire" route calls one final route, posting the user's answers to the form to the "calculate_score" route. This uses the calculate_message() method of the QuestionnaireHandler to return a message to the user, given their age and form answers. This message is rendered to a page, and the user is advised either to keep up the good work, or call for an appointment.
 
+## Flask Application Initialisation
+
+To initialise our Flask app, both when running the app and when performing automated testing, we run the create_app() function from application/app_factory.py. This function accepts a single argument, which is an instance of the class Config, defined in application/config.py. This Class loads values from our environment variables, or in the case of testing, accepts a string argument containing the name of the stage, which is one of three values set in an enum in the file application/config_stages.py: testing, development and production. Our create_app() function registers our t2lifestylechecker blueprint to the root prefix "/" and also initialises basic authentication support. The required chain of events to start and run our application are contained within the app.py file in the root of our project.
 
 ## File Structure
 
