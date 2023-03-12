@@ -143,8 +143,7 @@ Similarly the message thresholds list sets the maximum points for which a messag
 
 Options to build out the solution to part 3 more fully would require a mechanism to edit these values and validate them. The simplest would be to create a route to allow the json to be edited directly by an admin user, and saved to a new file. Greater levels of complexity would include a UI with form validation that allows an admin user to enter questions. I have implemented some validation of the loaded json file in the QuestionnaireHandler method named validate_question_data() and a more thorough list might include checks for the following:
 
-* any answer points length does not match age range maximums list + 1 
-⋅⋅⋅ i.e. there is not a points score defined for every age range for any given questionnaire answer.
+* any answer points length does not match age range maximums list + 1 i.e. there is not a points score defined for every age range for any given questionnaire answer.
 * no min age
 * input numerical values not int
 * no age range maximums set
