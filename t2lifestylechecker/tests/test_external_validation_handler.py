@@ -1,9 +1,7 @@
 from t2lifestylechecker.external_validation_handler import ExternalValidationHandler
 from t2lifestylechecker.t2lifestylechecker_config import external_api_login_results
-from t2lifestylechecker.tests.test_helpers import (
-    calculate_birth_year_from_constant_age_and_birthday,
-)
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import requests
 import pytest
 
@@ -22,6 +20,22 @@ def test_ExternalValidationHandler_call_validation_api_should_return_requests_re
     assert response.status_code == 200
 
 
+def calculate_birth_year_from_constant_age_and_birthday(
+    birthday_month_day: str, age: int
+) -> str:
+    today_object = datetime.now()
+
+    user_birthday_this_year = str(today_object.year) + birthday_month_day
+    user_birthday_this_year_obj = datetime.strptime(user_birthday_this_year, "%Y-%m-%d")
+
+    user_date_of_birth_from_age = user_birthday_this_year_obj - relativedelta(years=age)
+
+    if today_object < user_birthday_this_year_obj:
+        user_date_of_birth_from_age -= relativedelta(years=1)
+
+    return datetime.strftime(user_date_of_birth_from_age, "%Y-%m-%d")
+
+    
 age_calculations = [
     ("-03-31", 61, "1961-03-31"),
     ("-07-06", 39, "1983-07-06"),
@@ -113,7 +127,7 @@ known_api_transactions_1 = [
 @pytest.mark.parametrize(
     "nhs_number,first_name,last_name,date_of_birth,expected", known_api_transactions_1
 )
-def test_ExternalValidationHandler_validate_details_executes_function_sequence_correctly(
+def test_ExternalValidationHandler_validate_details_executes_method_sequence_correctly(
     nhs_number, first_name, last_name, date_of_birth, expected
 ):
     today_object = datetime.strptime("2021-12-31", "%Y-%m-%d")

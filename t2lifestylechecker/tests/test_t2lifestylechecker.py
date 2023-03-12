@@ -44,7 +44,7 @@ def test_t2lifestylechecker_index_route_should_return_sucess_with_expected_html_
         )
 
 
-def test_t2lifestylechecker_should_server_static_test_file_from_within_blueprint_static_js_folder():
+def test_t2lifestylechecker_should_serve_static_test_file_from_within_blueprint_static_js_folder():
     app = create_app(Config(Stage.testing))
 
     with app.test_client() as test_client:

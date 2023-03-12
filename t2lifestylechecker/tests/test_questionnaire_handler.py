@@ -1,7 +1,6 @@
 import pytest
 import os
 import json
-from dotenv import load_dotenv
 from t2lifestylechecker.questionnaire_handler import (
     QuestionnaireHandler,
     questionnaire_validity_states,
