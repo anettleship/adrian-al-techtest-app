@@ -63,7 +63,6 @@ def validate():
 
     if not result == external_api_login_results["found"]:
         language = os.environ.get("LANGUAGE")
-        
 
         questionnaire_title = os.environ.get("LOGIN_FORM_TITLE")
         template = jinja_env.get_template("message.html")
