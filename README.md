@@ -32,17 +32,17 @@ All python commands below must be run within a shell which has been elevated by 
 We must now generate an app secret key (used to encrypt application data stored in the user's session cookie). Run the following commands sequentially within an interactive session by running and then copy the result to use in the next step:
 
 `python`
->>> import secrets
->>> secrets.token_urlsafe(16)  
+`>>> import secrets`
+`>>> secrets.token_urlsafe(16)`
 
 Setting environment variables: Within the project structure is a folder named env_templates, it is necessary to copy the template.env file into the root of the project (place next to app.py) and rename it to .env. Then manually insert the correct values for our application secret key: SECRET_KEY="" and the subscription key (included in requests to the external API that returns patient data from an NHS number, provided separately on request by the api owners): SUBSCRIPTION_KEY="" in between the quotes.
 
 We can verify the .env is being loaded successfully by running the following to view our secret key:
 
 `python`
->>> from dotenv import load_dotenv
->>> load_dotenv()
->>> os.environ.get("SECRET_KEY")
+`>>> from dotenv import load_dotenv`
+`>>> load_dotenv()`
+`>>> os.environ.get("SECRET_KEY")`
 
 Note, that my prefered choice for secrets such as secret keys and api keys would be a service like AWS Secrets Manager. For simplicity in this project, we place these secrets in our .env file manually when setting up the project. 
 
@@ -76,6 +76,59 @@ pytest --cov
 
 ## File Structure
 
+
+adrian-al-techtest-app
+|
+|   .env - stores locally configured environment variables, not committed to source control, copy template.env to make your own.
+|   .gitignore - specifies files which git should ignore, such as .env 
+|   app.py - the start point of our flask app, run this to run the flask application locally
+|   Pipfile - used by pipenv, lists dependencies.
+|   Pipfile.lock - used by pipenv
+|   README.md - read this first
+|   requirements.txt - lists all module versions
+|   setup.cfg - used to configure pytest-cov to look at branch coverage
+|   
++---application - files related to standing up our flask application and loading the t2lifestylechecker blueprint
+|       app_factory.py - code that deals with standing up our flask application
+|       auth.py - code that handles setting up our login manager for authentication
+|       config.py - holds a class used to configure our flask application
+|       config_stages.py - holds an enum that defines valid settings for our stage variable in .env - determines actions when Config class is initialised
+|       __init__.py - helps python to discover modules in this folder
+|           
++---env_templates
+|       template.env - template environment variables, readme describes how to copy this to create your own .env file.
+|       
++---t2lifestylechecker - all functionality related to requirements for t2lifestylechecker located here, defines a blueprint for re-use in other applications
+    |   external_validation_handler.py - class to handle login function of first form (part 1)
+    |   external_validation_handler_helper.py - helper functions for above class, holds a dictionary of localised messages to show user, indexed by language code
+    |   questionnaire_handler.py - class to handle questionnaire function of the second form (part 2)
+    |   t2lifestylechecker.py - all routes for application blueprint are defined here
+    |   t2lifestylechecker_config.py - holds enums that define valid responses and states for objects and interactions in our project
+    |   __init__.py - helps python to discover modules in this folder
+    |   
+    +---question_data
+    |       default_question_data.json - represents questions, answers, age range thresholds and points for our questionnaire - demonstates how language locallisation could be built out if required
+    |       test_invalid_question_data.json - an intentionally invalid json file for testing basic data validation (part 3)
+    |       
+    +---static
+    |   \---js
+    |           testfile.js - our frontend uses Content Delivery Network links for css and js files, this route could accomodate serving static files if required
+    |           
+    +---templates
+    |       base.html - base html jinja template extended by all other templates
+    |       login.html - template for login page form
+    |       message.html - template to return user messages after login and questionnaire form entry
+    |       questionnaire.html - template for questionnaire page form
+    |       
+    +---tests - acceptance tests for the corresponding modules of for test_module_name
+        |   test_external_validation_handler.py 
+        |   test_external_validation_handler_helper.py 
+        |   test_questionnaire_handler.py
+        |   test_t2lifestylechecker.py
+        |   __init__.py - helps python to discover modules in this foldery
+        |   
+        +---cassettes - contains yaml files recording api responses for tests managed by pytest-record
+        
 
 
 ## Design Notes
