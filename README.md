@@ -3,19 +3,19 @@ Web application built for a job application tech test:
 
 ## Instructions to install and run on a local machine using the Flask inbuilt testing server:
 
-Clone repository using git to local machine and navigate into this folder from the command line.
-
-`git clone https://github.com/anettleship/adrian-al-techtest-app.git`
-
-`cd adrian-al-techtest-app`
-
 Install Python 3.11:
 https://www.python.org/downloads/
 Choose to add Python to Path
 
 Verify python is installed by running `python` from a terminal session, it may be necessary to restart your terminal session or reboot your machine if you have never installed python before. 
 
+Clone repository using git to local machine.
+
+`git clone https://github.com/anettleship/adrian-al-techtest-app.git`
+
 Using your terminal, cd into the project folder adrian-al-testtest-app.
+
+`cd adrian-al-techtest-app`
 
 Install pipenv for python 3:
 
