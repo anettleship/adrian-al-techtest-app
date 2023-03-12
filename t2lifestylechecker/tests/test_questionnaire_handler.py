@@ -105,23 +105,23 @@ def test_QuestionnaireHandler_validate_question_data_should_set_questionnaire_va
     )
 
 
-def test_QuestionnaireHandler_check_answer_points_for_all_age_ranges_should_return_false_if_points_list_for_any_answer_is_less_than_age_ranges_len_plus_one():
+def test_QuestionnaireHandler_validate_answer_points_exists_for_all_age_ranges_should_return_false_if_points_list_for_any_answer_is_less_than_age_ranges_len_plus_one():
     questionnaire_handler = QuestionnaireHandler()
 
     question_data_path = os.environ.get("QUESTION_DATA_PATH")
     questionnaire_handler.load_question_data(question_data_path)
     removed_points_value = questionnaire_handler.question_data["questions"][0]["answers"]["Yes"].pop()
 
-    assert questionnaire_handler.check_answer_points_for_all_age_ranges() == False
+    assert questionnaire_handler.validate_answer_points_exists_for_all_age_ranges() == False
 
 
-def test_QuestionnaireHandler_check_answer_points_for_all_age_ranges_should_return_true_if_points_list_for_all_answers_match_age_ranges_len_plus_one():
+def test_QuestionnaireHandler_validate_answer_points_exists_for_all_age_ranges_should_return_true_if_points_list_for_all_answers_match_age_ranges_len_plus_one():
     questionnaire_handler = QuestionnaireHandler()
 
     question_data_path = os.environ.get("QUESTION_DATA_PATH")
     questionnaire_handler.load_question_data(question_data_path)
 
-    assert questionnaire_handler.check_answer_points_for_all_age_ranges() == True
+    assert questionnaire_handler.validate_answer_points_exists_for_all_age_ranges() == True
 
 
 age_range_input_1 = [

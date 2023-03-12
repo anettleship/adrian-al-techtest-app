@@ -38,13 +38,13 @@ class QuestionnaireHandler:
             self.questionnaire_validity = questionnaire_validity_states["not_valid"]
             return
 
-        if not self.check_answer_points_for_all_age_ranges():
+        if not self.validate_answer_points_exists_for_all_age_ranges():
             self.questionnaire_validity = questionnaire_validity_states["not_valid"]
             return
 
         self.questionnaire_validity = questionnaire_validity_states["valid"]
 
-    def check_answer_points_for_all_age_ranges(self) -> bool:
+    def validate_answer_points_exists_for_all_age_ranges(self) -> bool:
         age_range_count = len(self.question_data["age_range_thresholds"])
         points_count_per_answer = age_range_count + 1
 
