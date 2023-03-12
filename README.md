@@ -94,39 +94,74 @@ When adding or changing tests with the @pytest.mark.vcr(filter_headers=(["Ocp-Ap
 
 pytest --record-mode=once
 
-We have pytest-cov in the requirements to check test coverage, including branch coverage. This is not set up to run automatically, as this would slow down running our tests. This can be run manually by the following command with a shell elevated to the virtual environment.
+See https://github.com/kiwicom/pytest-recording for more info.
 
-pytest --cov
+We have pytest-cov in our development dependencies, to check test coverage. This is not set up to run automatically, as this would slow down running our tests. This can be run manually by installing development packages from our piplock file and then using the following command with a shell elevated to the virtual environment. This is not necessary to run the application itself.
+
+`pipenv install --dev`
+
+Once installed run:
+
+`pytest --cov` 
+
+This will run tests and produce a report displaying current test coverage. The file 'setup.cfg' includes settings that control pytest-cov, most importantly, setting it up to check for branch coverage.
+
+For cases in the application where a response or validation can include one of a number of possible values, I have used enums to store these possibilities, and to communicate these values within tests. As opposed to passing a string or dictionary directly, which can take any value, the use of enums limits the possible states of these values to the discrete items set. These are stored in t2lifestylechecker_config.py.
+
+### Application Flow
+
+The t2lilfestylechecker blueprint is set up to start from the root of the application. The user is presented with a login form from the "/" route. 
+
+On entering correct details, these are posted to the "validate_login" route, which handles placing a call to the external api configured in environment variables. Code for these operations is contained in the ExternalValidationHandler class, which is initialised with data from the form post, and which will query the external api when the validate_details() method is called. 
+
+On successful validation, the user is logged in and their age saved to the flask session object for later. They are then redirected to a questionnaire, or a failure message if the details provided do not match the conditions specified in the requirements document. 
+
+The "questionnaire" route returns a second form, which asks the user questions about their lifestyle. It loads questionnaire data from a static json file, which includes all the questionnaire text and inputs for displaying a questionnaire and calculating the user's score and message in response to their form input. This is packaged together in the QuestionnaireHandler class, which is initialised with a parameter for the path to the questionnaire json data file in t2lifestlyechecker/question_data/default_question_data.json.
+
+The "questionnaire" route calls one final route, posting the user's answers to the form to the "calculate_score" route. This uses the calculate_message() method of the QuestionnaireHandler to return a message to the user, given their age and form answers. This message is rendered to a page, and the journey is complete.
+
 
 ## File Structure
 
 See file_structure.txt for an annotated list of folder heirarchies and the purpose of individual files.
 
-## Design Notes
+### Part 3 Requirements - Changing Questionnaire, Age Thresholds and Points without redeployment
 
-Localisation
+I have implemented the questionnaire data in a separate json file with the Part 3 requirements in mind. If it were required to edit the questionnaire, these adjustments could be made to the json form, which includes a list of age range thresholds which set the maximum age for which the corresponding points score at the same index for any given answer applies. Taking a simple example:
 
-There's a minor ambiguity in the specifications, as the age ranges for different points for answers to our questionnaire run 41-65 and then 64+, so that the ranges overlap. I have assumed this should be 41-64 and then 65+; the questionnaire and thresholds are loaded from a static json file, which can be edited if these values require adjustment.
+age_range_thresholds = [16,64]
+answer_score = [0,10,20]
 
-Validity checking:
+For the the settings above, someone up to and including age 16 would get a score of 0 for this answer, 17 - 64 inclusive would get 10 points, and greater than 64, i.e. 65+ would get a score of 20. 
 
+Similarly the message thresholds list sets the maximum points for which a message of that index applies.
 
-# cannot load json
-# cannot parse json
-# any answer points length does not match age range maximums list + 1
+Options to build out the solution to part 3 more fully would require a mechanism to edit these values and validate them. The simplest would be to create a route to allow the json to be edited directly by an admin user, and saved to a new file. Greater levels of complexity would include a UI with form validation that allows an admin user to enter questions. I have implemented some validation of the loaded json file in the QuestionnaireHandler method named validate_question_data() and a more thorough list might include checks for the following:
 
-# no min age
-# min age not int
-# no age range maximums set
-# age range maximums not int
-# age range maxiumums not sorted low to high
-# no questions property set
-# questions length is 0
-# question missing any of name, text, answers, and check if any fields length is 0
-# length of message maximums needs to be one less than length of messages list
-# json trailing commas
-# messages['states'] and dictionaries for each language match
+* cannot load json
+* cannot parse json
+* any answer points length does not match age range maximums list + 1
+* no min age
+* input numerical values not int
+* no age range maximums set
+* age range maximums not int
+* age range maxiumums not sorted low to high
+* no questions property set
+* questions length is 0
+* question missing any of name, text, answers, and check if any fields length is 0
+* length of message maximums needs to be one less than length of messages list
+* json trailing commas
+* messages['states'] and dictionaries for each language match
 
-Build this out into a web form with validation, and the ability for a user to input sample answers and sense check the results are as expected.
+It might at this point be more logical to unpack the json data we load into properties on the class, rather than leaving it as json data, as this would force a more thorough validation on the incoming data and facilitate giving accurate feedback to the user on the source of any issue.
 
-Language should be a user property to allow users to switch between languages.
+In the application, I have also demonstrated a partial implementation of language localisations. This includes an environment variable set to en-gb entries in the messages section of the detaul_question_data.json mapping to this code. Other languages could be included here, corresponsding to the preset list of 'states' defined in our json. Similarly, our external_validation_handler_helper includes a dictionary externalvalidationhandler_message_localisations, against which messages for a given login_result can be looked up. As the application stands, this is not currently implemented or Questions in our questionnaire in multiple languages. Also currently, our language set as a environment variable for the full application scope, which would be better refactored to set language in the user session, or as part of the base path of the route, allowing different users to use the app in different languages simultaneously. On this same point, the titles of our forms are currently stored as environment variables. They would be better placed together with localised form fields text as a series of xml or json files if the language use case were to scale. 
+
+## Additional Features
+
+Some additional features I would build out were I to spend more time on the project include:
+
+* Client side validation of Login Form input e.g. to reject blank or invalid inputs like future dates.
+* Feedback to the client while the external api is being called, perhaps as simple as an animation made visible by client side code while the flask application calls the external api and redirects the client.
+* The next logical step would be to move the call to the external api to an asyncronous call, so the flask application can return a response immediately to acknowledge the user's input, rather than locking up while waiting for the external api. Client side code could poll a separate route to display the results to the user when the async call has completed.
+* The application has no logging currently, it might be useful to detect when users are trying and failing to log in, in case of issues with the external api. We need to be careful about whether or how we store personal data in such a scenario.

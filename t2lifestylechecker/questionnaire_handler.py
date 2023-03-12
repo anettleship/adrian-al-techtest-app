@@ -45,7 +45,7 @@ class QuestionnaireHandler:
         self.questionnaire_validity = questionnaire_validity_states["valid"]
 
     def check_answer_points_for_all_age_ranges(self) -> bool:
-        age_range_count = len(self.question_data["age_range_maximums"])
+        age_range_count = len(self.question_data["age_range_thresholds"])
         points_count_per_answer = age_range_count + 1
 
         for question in self.question_data["questions"]:
@@ -66,7 +66,7 @@ class QuestionnaireHandler:
         return self.get_message_from_points(points)
 
     def calculate_points(self, age: int, answers: list) -> int:
-        age_index = self.get_age_index(age, self.question_data["age_range_maximums"])
+        age_index = self.get_age_index(age, self.question_data["age_range_thresholds"])
 
         points = 0
 
@@ -77,25 +77,25 @@ class QuestionnaireHandler:
 
         return points
 
-    def get_age_index(self, age: int, age_range_maximums: list) -> int:
-        for i, max_age in enumerate(age_range_maximums):
+    def get_age_index(self, age: int, age_range_thresholds: list) -> int:
+        for i, max_age in enumerate(age_range_thresholds):
             if age <= max_age:
                 return i
 
-        return len(age_range_maximums)
+        return len(age_range_thresholds)
 
     def get_message_from_points(self, points: int) -> str:
-        message_maximums = self.question_data["message_maximums"]
-        message_index = self.get_message_index(points, message_maximums)
+        message_thresholds = self.question_data["message_thresholds"]
+        message_index = self.get_message_index(points, message_thresholds)
 
         questionnaire_result_messages = self.question_data["messages"]
         message_key = questionnaire_result_messages["states"][message_index]
 
         return questionnaire_result_messages[self.language][message_key]
 
-    def get_message_index(self, points: int, message_maximums: list) -> int:
-        for i, max_points in enumerate(message_maximums):
+    def get_message_index(self, points: int, message_thresholds: list) -> int:
+        for i, max_points in enumerate(message_thresholds):
             if points <= max_points:
                 return i
 
-        return len(message_maximums)
+        return len(message_thresholds)

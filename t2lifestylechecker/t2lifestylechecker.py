@@ -109,11 +109,13 @@ def calculate():
         answer = request.form[question]
         answers.append(answer)
 
+    final_message = questionnaire_handler.caluculate_message(age, answers)
+
     logout_user()
 
     questionnaire_title = os.environ.get("QUESTION_FORM_TITLE")
     template = jinja_env.get_template("message.html")
     return template.render(
         title=questionnaire_title,
-        message=questionnaire_handler.caluculate_message(age, answers)
+        message=final_message
     )

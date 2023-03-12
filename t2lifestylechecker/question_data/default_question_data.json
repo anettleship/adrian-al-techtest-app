@@ -1,6 +1,6 @@
 {
     "min_age": 16,
-    "age_range_maximums": [21,40,64],
+    "age_range_thresholds": [21,40,64],
     "questions": [
         {
             "name": "Q1",
@@ -27,7 +27,7 @@
             }
         }
     ],
-    "message_maximums": [3],
+    "message_thresholds": [3],
     "messages": {
         "states" : ["great_work", "please_call"],
         "en-gb" : {
