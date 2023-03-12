@@ -77,7 +77,7 @@ pytest --cov
 ## File Structure
 
 
-adrian-al-techtest-app
+`adrian-al-techtest-app
 |
 |   .env - stores locally configured environment variables, not committed to source control, copy template.env to make your own.
 |   .gitignore - specifies files which git should ignore, such as .env 
@@ -127,7 +127,7 @@ adrian-al-techtest-app
         |   test_t2lifestylechecker.py
         |   __init__.py - helps python to discover modules in this foldery
         |   
-        +---cassettes - contains yaml files recording api responses for tests managed by pytest-record
+        +---cassettes - contains yaml files recording api responses for tests managed by pytest-record`
         
 
 
