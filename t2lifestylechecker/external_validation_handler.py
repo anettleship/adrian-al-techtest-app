@@ -42,11 +42,9 @@ class ExternalValidationHandler:
         if response.status_code != 200:
             return external_api_login_results["not_found"]
 
-        # check if user_data matches data in response
         if not self.user_data_matches(response):
             return external_api_login_results["details_not_matched"]
 
-        # check if user date of birth is not over sixteen
         form_date_format_str = os.environ.get("FORM_INPUT_DATE_FORMAT_STRING")
         self.user_age = self.get_age_today(self.date_of_birth, form_date_format_str)
 
@@ -58,9 +56,12 @@ class ExternalValidationHandler:
     def get_age_today(self, date_of_birth: str, date_format_str: str) -> int:
         born = datetime.strptime(date_of_birth, date_format_str)
         today = self.today
-        return (
-            today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-        )
+
+        age_at_end_of_year = today.year - born.year
+        if (today.month, today.day) < (born.month, born.day):
+            age_at_end_of_year -= 1
+
+        return age_at_end_of_year
 
     def user_data_matches(self, response: requests.Response) -> bool:
         if self.make_fullname_string() != response.json()["name"].lower():
