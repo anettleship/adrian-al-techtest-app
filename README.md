@@ -72,7 +72,11 @@ Now we have set up our environment variables, still running within our virtual e
 
 `pytest`
 
-If all tests pass, we can then run the following to start our server. Note the web address where this is being served and navigate to this URL from a web browser, to access our application:
+If any tests fail, the most likely issue is a missing or misplaced yaml cassette recording of an api request. Try running the following to create missing recordings by accessing the live api once:
+
+`pytest --record-mode=once`
+
+If all tests pass, we can then run the following to start our server. Note the web address where this is being served and navigate to this URL from a web browser, to access our application e.g. http://127.0.0.1:5000:
 
 `flask run`
 
