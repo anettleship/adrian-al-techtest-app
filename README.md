@@ -7,6 +7,8 @@ Clone repository using git to local machine and navigate into this folder from t
 
 `git clone https://github.com/anettleship/adrian-al-techtest-app.git`
 
+`cd adrian-al-techtest-app`
+
 Install Python 3.11:
 https://www.python.org/downloads/
 Choose to add Python to Path
